@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme {
+  /* Colors - Light mode defaults */
+  --color-primary: #6366F1;
+  --color-primary-foreground: #FFFFFF;
+  --color-secondary: #8B5CF6;
+  --color-secondary-foreground: #FFFFFF;
+  --color-accent: #F97316;
+  --color-accent-foreground: #FFFFFF;
+  --color-background: #FAFAFE;
+  --color-foreground: #0F172A;
+  --color-card: #FFFFFF;
+  --color-card-foreground: #0F172A;
+  --color-muted: #F1F5F9;
+  --color-muted-foreground: #64748B;
+  --color-border: #E2E8F0;
+  --color-ring: #6366F1;
+  --color-destructive: #EF4444;
+  --color-destructive-foreground: #FFFFFF;
+  --color-success: #10B981;
+  --color-warning: #F59E0B;
+  --color-info: #06B6D4;
+
+  /* Typography */
+  --font-heading: "Outfit", sans-serif;
+  --font-sans: "Inter", sans-serif;
+  --font-mono: "JetBrains Mono", monospace;
+
+  /* Layout tokens */
+  --sidebar-width: 256px;
+  --sidebar-width-collapsed: 72px;
+  --header-height: 64px;
+  --content-max-width: 1200px;
+
+  /* Border radius */
+  --radius-card: 16px;
+  --radius-button: 12px;
+  --radius-input: 10px;
+  --radius-badge: 8px;
+}
+
+/* Dark mode overrides */
+.dark {
+  --color-primary: #818CF8;
+  --color-secondary: #A78BFA;
+  --color-accent: #FB923C;
+  --color-background: #0B0F1A;
+  --color-foreground: #F8FAFC;
+  --color-card: #151A2D;
+  --color-card-foreground: #F1F5F9;
+  --color-muted: #1E293B;
+  --color-muted-foreground: #94A3B8;
+  --color-border: rgba(255, 255, 255, 0.08);
+}
+
+/* Base styles */
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-background);
+  color: var(--color-foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
