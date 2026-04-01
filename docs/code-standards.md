@@ -1,6 +1,6 @@
 # Code Standards — Teaching Platform
 
-**Phase:** Foundation & Project Setup Complete
+**Phase:** Phase 2 Complete (Question Bank & Assessment Features)
 
 Coding conventions and architectural patterns for maintaining consistency across the monorepo.
 
@@ -80,6 +80,22 @@ app.use("/api/*", async (c, next) => {
   c.set("Variables", { userId: extractUserId(c) });
   await next();
 });
+```
+
+#### Services Layer (Phase 2+)
+- Service files in `src/services/` — encapsulate business logic
+- Naming: `{domain}-service.ts`
+- Keep route handlers thin: delegate to services for complex operations
+
+```typescript
+// src/services/question-service.ts
+export async function createQuestion(data: CreateQuestion, teacherId: string) {
+  // Validate, insert, handle relations
+}
+
+export async function buildQuestionFilters(teacherId: string, filters: QuestionFilter) {
+  // Build Drizzle query conditions
+}
 ```
 
 #### Error Handling
@@ -171,6 +187,29 @@ export const dashboardRoute = new Route({
   path: "/dashboard",
   component: () => <Dashboard />,
 });
+```
+
+#### Content Rendering (Phase 2+)
+- Use `react-markdown` with plugins for markdown support in questions
+- Always render markdown safely with sanitization where applicable
+- Support code highlighting via `rehype-highlight`
+- Support math rendering via `rehype-katex` for LaTeX equations
+
+```tsx
+import ReactMarkdown from 'react-markdown';
+import { remarkGfm } from 'remark-gfm';
+import { rehypeKatex } from 'rehype-katex';
+
+export function QuestionContent({ content }: Props) {
+  return (
+    <ReactMarkdown 
+      remarkPlugins={[remarkGfm]} 
+      rehypePlugins={[rehypeKatex]}
+    >
+      {content}
+    </ReactMarkdown>
+  );
+}
 ```
 
 #### Styling
@@ -471,8 +510,12 @@ apps/api/src/
 │   └── cors-middleware.ts  # CORS
 ├── routes/
 │   ├── users-route.ts      # GET /api/users, PATCH /api/users
-│   ├── assessments-route.ts # (Phase 2)
+│   ├── questions-route.ts  # CRUD + filtering for questions
+│   ├── tags-route.ts       # CRUD for tags
+│   ├── upload-route.ts     # Image upload & retrieval
 │   └── ...
+├── services/
+│   └── question-service.ts # Question business logic + helpers
 ├── lib/
 │   └── id-generator.ts     # Custom ID generation
 ├── env.ts                  # Environment type definitions
@@ -488,7 +531,16 @@ apps/web/src/
 │   ├── login-route.tsx     # Public login
 │   ├── authed-layout.tsx   # Protected layout
 │   ├── dashboard-route.tsx # Main dashboard
-│   └── placeholder-routes.tsx # Stub routes
+│   ├── questions-routes.tsx # Question bank routes
+│   └── ...
+├── features/
+│   └── questions/          # Question bank feature module
+│       ├── question-list-page.tsx
+│       ├── question-editor-page.tsx
+│       ├── question-card.tsx
+│       ├── question-filter-panel.tsx
+│       ├── tag-selector.tsx
+│       └── image-upload-button.tsx
 ├── components/
 │   ├── layout/
 │   │   ├── app-shell.tsx

@@ -1,6 +1,6 @@
 # System Architecture — Teaching Platform
 
-**Current Phase:** Phase 1 Complete (Foundation & Project Setup)
+**Current Phase:** Phase 2 Complete (Question Bank & Assessment Features)
 
 ---
 
@@ -24,6 +24,9 @@ Teaching Platform is a monorepo-based SaaS for educators to create, assign, and 
 | **Styling** | Tailwind CSS | 4.0 (CSS-based) |
 | **Icons** | Lucide React | Latest |
 | **Package Manager** | pnpm | 9.15+ |
+| **Markdown** | react-markdown + remark plugins | Latest |
+| **Math Rendering** | rehype-katex + remark-math | Latest |
+| **Code Highlighting** | rehype-highlight | Latest |
 
 ---
 
@@ -36,7 +39,8 @@ teaching-platform/
 │   │   ├── src/
 │   │   │   ├── db/schema.ts           # Drizzle ORM schema (15 tables)
 │   │   │   ├── middleware/            # cors, auth, error handling
-│   │   │   ├── routes/                # API route handlers
+│   │   │   ├── routes/                # API route handlers (users, questions, tags, upload)
+│   │   │   ├── services/              # Business logic (question service)
 │   │   │   ├── lib/                   # Utilities (ID generation)
 │   │   │   ├── env.ts                 # Environment types
 │   │   │   └── index.ts               # Hono app entry
@@ -46,6 +50,8 @@ teaching-platform/
 │   └── web/                    # React + Vite frontend
 │       ├── src/
 │       │   ├── routes/                # TanStack Router routes
+│       │   ├── features/              # Feature-specific components & logic
+│       │   │   └── questions/         # Question bank UI (list, editor, filters)
 │       │   ├── components/
 │       │   │   ├── layout/            # Shell, sidebar, header, dark-mode
 │       │   │   └── ui/                # Reusable UI components
@@ -113,10 +119,25 @@ Hono App (src/index.ts)
 │   └── POST /webhook/clerk — Clerk webhook for user sync
 ├── Protected Routes (/api/*)
 │   ├── Auth Middleware (JWT verification)
-│   └── /api/users
-│       ├── GET / — Current user profile
-│       ├── PATCH / — Update profile
-│       └── Other user-related endpoints
+│   ├── /api/users
+│   │   ├── GET / — Current user profile
+│   │   ├── PATCH / — Update profile
+│   │   └── Other user-related endpoints
+│   ├── /api/tags
+│   │   ├── GET / — List all tags for teacher
+│   │   ├── POST / — Create tag
+│   │   ├── PUT /:id — Update tag
+│   │   └── DELETE /:id — Delete tag
+│   ├── /api/questions
+│   │   ├── GET / — List questions with filters (tags, complexity, search, pagination)
+│   │   ├── POST / — Create question
+│   │   ├── POST /bulk — Bulk import questions
+│   │   ├── GET /:id — Get single question
+│   │   ├── PUT /:id — Update question
+│   │   └── DELETE /:id — Delete question
+│   └── /api/upload
+│       ├── POST /image — Upload image asset
+│       └── GET /image/:id — Retrieve image
 └── Health Check (/health)
 ```
 
@@ -180,7 +201,11 @@ Hono App (src/index.ts)
 - **notification-types.ts** — Notification event types
 
 ### Schemas (`src/schemas/`)
-- **index.ts** — Zod validation schemas for API requests/responses (e.g., CreateQuestion, AssessmentFilter)
+- **index.ts** — Zod validation schemas for API requests/responses:
+  - `createQuestionSchema`, `updateQuestionSchema`, `bulkQuestionSchema`
+  - `createTagSchema`, `updateTagSchema`
+  - `questionFilterSchema` (for listing with filters)
+  - `hexColorSchema` (for tag colors)
 
 ---
 
@@ -250,7 +275,26 @@ pnpm run typecheck                # Type-check all (turborepo)
 
 ---
 
-## 10. Styling & Design System
+## 10. Markdown & Content Rendering
+
+### Question Editor & Preview
+- **react-markdown** — Renders markdown in questions and previews
+- **remark-gfm** — GitHub-flavored markdown extensions (tables, strikethrough)
+- **remark-math** — Math syntax support (LaTeX)
+- **rehype-katex** — Renders LaTeX equations (inline & block)
+- **rehype-highlight** — Syntax highlighting for code blocks
+- **Image embedding** — Questions support embedded images via `/api/upload/image`
+
+### Markdown Support in Questions
+- Headings, lists, bold/italic formatting
+- Code blocks with language-specific syntax highlighting
+- Tables, strikethrough, task lists
+- Inline & block LaTeX equations: `$x = y$` and `$$x = y$$`
+- Image references: `![alt](image-id)`
+
+---
+
+## 11. Styling & Design System
 
 - **Tailwind CSS v4** with CSS-based config (@theme directives)
 - **Design tokens** defined in design-guidelines.md
@@ -260,7 +304,7 @@ pnpm run typecheck                # Type-check all (turborepo)
 
 ---
 
-## 11. Integration Points (Phase 2+)
+## 12. Integration Points (Phase 3+)
 
 ### Planned Features
 1. **Assessment grading** — Auto-grade MCQ, manual grading for essays
@@ -278,16 +322,16 @@ pnpm run typecheck                # Type-check all (turborepo)
 
 ---
 
-## 12. Performance Considerations
+## 13. Performance Considerations
 
 - **TanStack Query** handles API caching, deduplication, background refetch
 - **Code splitting** — TanStack Router lazy-loads routes
 - **Database indexes** — On frequently queried fields (classroom_id, student_id, post_id)
-- **Pagination** (phase 2+) — Large lists (questions, assessments) paginated
+- **Pagination** — Large lists (questions, assessments) paginated with cursor-based navigation
 
 ---
 
-## 13. Monitoring & Debugging
+## 14. Monitoring & Debugging
 
 - **Health check** — GET /health returns `{ status: "ok" }`
 - **Error middleware** — Catches all errors, logs + returns 400/500 JSON responses

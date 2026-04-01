@@ -4,6 +4,9 @@ import { corsMiddleware } from "./middleware/cors-middleware.js";
 import { authMiddleware } from "./middleware/auth-middleware.js";
 import { errorMiddleware } from "./middleware/error-middleware.js";
 import { usersRoute, clerkWebhookRoute } from "./routes/users-route.js";
+import { tagsRoute } from "./routes/tags-route.js";
+import { questionsRoute } from "./routes/questions-route.js";
+import { uploadRoute } from "./routes/upload-route.js";
 
 type Variables = { userId: string };
 
@@ -22,7 +25,11 @@ app.route("/webhook/clerk", clerkWebhookRoute);
 app.use("/api/*", authMiddleware);
 
 // ── Protected API routes ───────────────────────────────────────────────────────
-const routes = app.route("/api/users", usersRoute);
+const routes = app
+  .route("/api/users", usersRoute)
+  .route("/api/tags", tagsRoute)
+  .route("/api/questions", questionsRoute)
+  .route("/api/upload/image", uploadRoute);
 
 // ── Health check ───────────────────────────────────────────────────────────────
 app.get("/health", (c) => c.json({ status: "ok" }));

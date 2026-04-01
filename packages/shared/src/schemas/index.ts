@@ -46,9 +46,11 @@ export const createQuestionSchema = z.object({
   tagIds: z.array(z.string()).optional(),
 });
 
+const hexColorSchema = z.string().regex(/^#[0-9a-fA-F]{3,8}$/, "Must be a valid hex color");
+
 export const createTagSchema = z.object({
   name: z.string().min(1).max(50),
-  color: z.string().nullable().optional(),
+  color: hexColorSchema.nullable().optional(),
 });
 
 export const createAssessmentSchema = z.object({
@@ -89,4 +91,40 @@ export const createCommentSchema = z.object({
 export const submitAnswerSchema = z.object({
   questionId: z.string(),
   selectedOptionId: z.string(),
+});
+
+/* ── Update schemas (partial versions of create schemas) ── */
+
+export const updateQuestionSchema = z.object({
+  content: z.string().min(1).optional(),
+  options: z.array(questionOptionSchema).min(2).max(6).optional(),
+  complexity: complexityLevelSchema.optional(),
+  complexityType: complexityTypeSchema.optional(),
+  explanation: z.string().nullable().optional(),
+  tagIds: z.array(z.string()).optional(),
+});
+
+export const updateTagSchema = z.object({
+  name: z.string().min(1).max(50).optional(),
+  color: hexColorSchema.nullable().optional(),
+});
+
+/* ── Bulk operations ── */
+
+export const bulkQuestionSchema = z.object({
+  action: z.enum(["delete", "retag"]),
+  questionIds: z.array(z.string()).min(1),
+  tagIds: z.array(z.string()).optional(),
+});
+
+/* ── Question list filters (query params) ── */
+
+export const questionFilterSchema = z.object({
+  tagIds: z.string().optional(), // comma-separated tag IDs
+  complexityMin: z.coerce.number().int().min(1).max(5).optional(),
+  complexityMax: z.coerce.number().int().min(1).max(5).optional(),
+  complexityType: complexityTypeSchema.optional(),
+  search: z.string().optional(),
+  cursor: z.string().optional(),
+  limit: z.coerce.number().int().min(1).max(50).default(20),
 });

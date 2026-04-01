@@ -2,26 +2,7 @@ import { createRoute } from "@tanstack/react-router";
 import { authedLayout } from "./authed-layout";
 import { PageHeader } from "@/components/ui/page-header";
 import { EmptyState } from "@/components/ui/empty-state";
-import { BookOpen, ClipboardList, Users, Bell } from "lucide-react";
-
-// ---------------------------------------------------------------------------
-// Questions — Phase 2
-// ---------------------------------------------------------------------------
-
-export const questionsRoute = createRoute({
-  getParentRoute: () => authedLayout,
-  path: "/questions",
-  component: () => (
-    <div className="space-y-6">
-      <PageHeader title="Questions" description="Question bank management" />
-      <EmptyState
-        icon={<BookOpen size={40} />}
-        headline="Questions coming in Phase 2"
-        description="Build, tag, and manage your reusable question library here."
-      />
-    </div>
-  ),
-});
+import { ClipboardList, Users, Bell } from "lucide-react";
 
 // ---------------------------------------------------------------------------
 // Assessments — Phase 3

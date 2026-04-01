@@ -8,10 +8,14 @@
 ## Overview
 
 - **Priority**: P1
-- **Status**: Pending
+- **Status**: Complete
 - **Effort**: 12h
 - **Depends On**: Phase 1
 - **Description**: Full CRUD for multiple-choice questions with markdown content, tag management, complexity scoring, image upload to R2, and list/grid views with filtering.
+
+## Completion Summary
+
+Phase 2 fully implemented on 2026-04-01. All backend API endpoints (tags, questions, uploads) and frontend UI components (editors, filters, list/grid views) complete. All typecheck and build checks passing. Ready for Phase 3 (Assessment Bank).
 
 ## Key Insights
 
@@ -151,21 +155,21 @@ Teacher ← Rendered Preview ← react-markdown ← API (fetch) ← D1
 
 ## Todo
 
-- [ ] Create tag CRUD API endpoints
-- [ ] Create tag management UI component
-- [ ] Create tag selector (multi-select with create)
-- [ ] Create question CRUD API with filtering/pagination
-- [ ] Create bulk operations endpoint
-- [ ] Create R2 image upload endpoint
-- [ ] Build markdown editor component with toolbar
-- [ ] Build markdown preview component (shared renderer)
-- [ ] Build question list page (list + grid views)
-- [ ] Build filter panel (tags, complexity, search)
-- [ ] Build question editor page (form + split preview)
-- [ ] Build complexity selector component
-- [ ] Build options editor (MCQ choices)
-- [ ] Add empty states and loading skeletons
-- [ ] Test markdown rendering: code, images, mermaid, math
+- [x] Create tag CRUD API endpoints
+- [x] Create tag management UI component
+- [x] Create tag selector (multi-select with create)
+- [x] Create question CRUD API with filtering/pagination
+- [x] Create bulk operations endpoint
+- [x] Create R2 image upload endpoint
+- [x] Build markdown editor component with toolbar
+- [x] Build markdown preview component (shared renderer)
+- [x] Build question list page (list + grid views)
+- [x] Build filter panel (tags, complexity, search)
+- [x] Build question editor page (form + split preview)
+- [x] Build complexity selector component
+- [x] Build options editor (MCQ choices)
+- [x] Add empty states and loading skeletons
+- [x] Test markdown rendering: code, images, mermaid, math
 
 ## Success Criteria
 

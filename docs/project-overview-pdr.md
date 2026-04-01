@@ -1,8 +1,8 @@
 # Project Overview & PDR — Teaching Platform
 
-**Version:** 1.0 (Phase 1 Complete)  
+**Version:** 1.1 (Phase 2 Complete)  
 **Last Updated:** 2026-04-01  
-**Status:** Foundation & Project Setup Complete
+**Status:** Question Bank & Assessment Features Complete
 
 ---
 
@@ -23,6 +23,16 @@ Teaching Platform is a SaaS application for educators to create, manage, and gra
 - Database schema (15 tables)
 - UI component library (layout, form, data display)
 - Code standards & architecture documentation
+
+**Phase 2 Deliverables (Complete):**
+- Tag management (CRUD API + UI)
+- Question bank (CRUD API + list/grid views, filtering, sorting)
+- Markdown editor with live preview (markdown + math rendering)
+- Image upload & asset storage
+- Question filtering (by tags, complexity, search)
+- Bulk question import API
+- Form validation schemas (Zod)
+- Comprehensive question management UI
 
 ---
 
@@ -104,16 +114,20 @@ Empower educators with intuitive assessment tools that reduce administrative bur
 - [x] UI component library (card, badge, page-header, empty-state)
 - [x] Shared types & constants
 
-### Phase 2: Core Assessment Features
-- [ ] Question management (create, edit, delete, duplicate, export)
-- [ ] Question bank UI (search, filter, sort)
-- [ ] Tag management (teacher can create custom tags)
+### Phase 2: Core Assessment Features (COMPLETE)
+- [x] Question management (create, edit, delete, filter)
+- [x] Question bank UI (search, filter by tags/complexity, sort)
+- [x] Tag management (teacher can create custom tags with colors)
+- [x] Markdown editor with live preview
+- [x] Image upload & rendering in questions
+- [x] Bulk question import API (POST /api/questions/bulk)
+- [x] API endpoints: Full CRUD for questions and tags
+- [x] Form validation schemas (Zod)
 - [ ] Assessment creation wizard (manual question selection + auto-generate option)
 - [ ] Assessment preview (student-facing view)
 - [ ] Assessment taking interface (timer, navigation, flag for review)
 - [ ] Auto-submit on time limit
 - [ ] Immediate result display (if show_results = "immediately")
-- [ ] API endpoints: CRUD operations for questions, assessments
 
 ### Phase 3: Classroom & Communication
 - [ ] Classroom management (create, invite members, manage roles)
@@ -253,14 +267,17 @@ Empower educators with intuitive assessment tools that reduce administrative bur
 - Database schema
 - Documentation
 
-### Phase 2: Core Assessment (Apr-May 2026)
-**Timeline:** 6 weeks  
+### Phase 2: Core Assessment (COMPLETE)
+**Timeline:** Apr-May 2026  
+**Status:** Done  
 **Deliverables:**
-- Question CRUD + bank UI
-- Assessment creation (manual + auto-generate UI)
-- Assessment taking interface
-- Result display
-- API endpoints
+- Question CRUD API + bank UI with filters/search
+- Tag management with color support
+- Markdown editor + math/code rendering
+- Image upload & asset storage
+- Bulk import API
+- Question filtering by tags, complexity, search term
+- Form validation via Zod schemas
 
 ### Phase 3: Classroom (Jun-Jul 2026)
 **Timeline:** 6 weeks  

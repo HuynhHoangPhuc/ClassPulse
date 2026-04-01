@@ -4,11 +4,15 @@ import { loginRoute } from "./login-route";
 import { authedLayout } from "./authed-layout";
 import { dashboardRoute } from "./dashboard-route";
 import {
-  questionsRoute,
   assessmentsRoute,
   classroomsRoute,
   notificationsRoute,
 } from "./placeholder-routes";
+import {
+  questionsRoute,
+  questionNewRoute,
+  questionEditRoute,
+} from "./questions-routes";
 
 // ---------------------------------------------------------------------------
 // Index redirect: / → /dashboard
@@ -33,6 +37,8 @@ const routeTree = rootRoute.addChildren([
   authedLayout.addChildren([
     dashboardRoute,
     questionsRoute,
+    questionNewRoute,
+    questionEditRoute,
     assessmentsRoute,
     classroomsRoute,
     notificationsRoute,
