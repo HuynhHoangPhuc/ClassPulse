@@ -13,12 +13,18 @@ export const users = sqliteTable("users", {
 });
 
 // ── Parent ↔ Student relationship ─────────────────────────────────────────────
-export const parentStudent = sqliteTable("parent_student", {
-  id: text("id").primaryKey(),
-  parentId: text("parent_id").notNull().references(() => users.id),
-  studentId: text("student_id").notNull().references(() => users.id),
-  createdAt: integer("created_at").notNull(),
-});
+export const parentStudent = sqliteTable(
+  "parent_student",
+  {
+    id: text("id").primaryKey(),
+    parentId: text("parent_id").notNull().references(() => users.id),
+    studentId: text("student_id").notNull().references(() => users.id),
+    createdAt: integer("created_at").notNull(),
+  },
+  (t) => ({
+    parentStudentIdx: index("parent_student_parent_student_idx").on(t.parentId, t.studentId),
+  }),
+);
 
 // ── Tags (teacher-created labels for questions) ────────────────────────────────
 export const tags = sqliteTable("tags", {

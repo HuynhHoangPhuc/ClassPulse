@@ -15,6 +15,7 @@ import { attemptRoutes } from "./routes/attempt-routes.js";
 import { commentRoutes } from "./routes/comment-routes.js";
 import { websocketRoutes } from "./routes/websocket-routes.js";
 import { notificationRoutes } from "./routes/notification-routes.js";
+import { parentRoutes } from "./routes/parent-routes.js";
 
 type Variables = { userId: string };
 
@@ -47,7 +48,8 @@ const routes = app
   .route("/api/classrooms", classroomPostRoutes)
   .route("/api/attempts", attemptRoutes)
   .route("/api", commentRoutes)
-  .route("/api", notificationRoutes);
+  .route("/api", notificationRoutes)
+  .route("/api/parent", parentRoutes);
 
 // ── Health check ───────────────────────────────────────────────────────────────
 app.get("/health", (c) => c.json({ status: "ok" }));

@@ -1,9 +1,12 @@
 import { Hono } from "hono";
 import { drizzle } from "drizzle-orm/d1";
+import { eq, and } from "drizzle-orm";
 import type { Env } from "../env.js";
 import { addMemberSchema } from "@teaching/shared";
 import { isClassroomTeacher, isClassroomMember } from "../services/classroom-service.js";
 import { addMember, removeMember, listMembers } from "../services/classroom-member-service.js";
+import { classroomMembers, parentStudent } from "../db/schema.js";
+import { generateId } from "../lib/id-generator.js";
 
 type Variables = { userId: string };
 const classroomMemberRoutes = new Hono<Env & { Variables: Variables }>();
@@ -41,6 +44,30 @@ classroomMemberRoutes.post("/:id/members", async (c) => {
   if ("error" in result) {
     return c.json({ error: result.error }, 400);
   }
+
+  // Auto-link parent to students in the same classroom
+  if (parsed.data.role === "parent") {
+    const studentMembers = await db
+      .select({ userId: classroomMembers.userId })
+      .from(classroomMembers)
+      .where(and(eq(classroomMembers.classroomId, classroomId), eq(classroomMembers.role, "student")));
+
+    if (studentMembers.length > 0) {
+      const now = Date.now();
+      await db
+        .insert(parentStudent)
+        .values(
+          studentMembers.map((s) => ({
+            id: generateId(),
+            parentId: result.userId,
+            studentId: s.userId,
+            createdAt: now,
+          })),
+        )
+        .onConflictDoNothing();
+    }
+  }
+
   return c.json(result, 201);
 });
 

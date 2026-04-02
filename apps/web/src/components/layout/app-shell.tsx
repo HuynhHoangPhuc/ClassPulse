@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { ReactNode } from "react";
 import { Sidebar } from "./sidebar";
 import { Header } from "./header";
+import { useCurrentUser } from "@/hooks/use-current-user";
 
 interface AppShellProps {
   children: ReactNode;
@@ -13,6 +14,8 @@ interface AppShellProps {
  */
 export function AppShell({ children }: AppShellProps) {
   const [mobileOpen, setMobileOpen] = useState(false);
+  const { data: user } = useCurrentUser();
+  const role = (user?.role ?? "teacher") as "teacher" | "student" | "parent";
 
   return (
     <div
@@ -21,7 +24,7 @@ export function AppShell({ children }: AppShellProps) {
     >
       {/* Sidebar */}
       <Sidebar
-        role="teacher"
+        role={role}
         mobileOpen={mobileOpen}
         onMobileClose={() => setMobileOpen(false)}
       />

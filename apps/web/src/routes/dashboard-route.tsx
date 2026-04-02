@@ -2,6 +2,8 @@ import { createRoute } from "@tanstack/react-router";
 import { authedLayout } from "./authed-layout";
 import { PageHeader } from "@/components/ui/page-header";
 import { Card } from "@/components/ui/card";
+import { useCurrentUser } from "@/hooks/use-current-user";
+import { ParentDashboardPage } from "@/features/dashboard/parent-dashboard-page";
 
 export const dashboardRoute = createRoute({
   getParentRoute: () => authedLayout,
@@ -63,28 +65,26 @@ function StudentDashboard() {
   );
 }
 
-function ParentDashboard() {
-  return (
-    <div className="space-y-6">
-      <PageHeader
-        title="Dashboard"
-        description="Your child's progress dashboard is coming soon."
-      />
-    </div>
-  );
-}
-
-// --- Route component: role hardcoded to "teacher" until Clerk metadata is wired ---
-
-type Role = "teacher" | "student" | "parent";
+// --- Route component: derives role from user profile ---
 
 function DashboardPage() {
-  // TODO: Derive role from Clerk user public metadata once available.
-  // Cast through unknown to prevent TS from narrowing the literal "teacher"
-  // to a single-member type, which would make the guard comparisons unreachable.
-  const role = "teacher" as unknown as Role;
+  const { data: user, isLoading } = useCurrentUser();
+  const role = user?.role ?? "teacher";
 
+  if (isLoading) {
+    return (
+      <div className="space-y-6">
+        <div className="h-8 w-48 rounded-lg animate-pulse" style={{ background: "var(--color-muted)" }} />
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          {[1, 2, 3, 4].map((i) => (
+            <div key={i} className="h-28 rounded-xl animate-pulse" style={{ background: "var(--color-muted)" }} />
+          ))}
+        </div>
+      </div>
+    );
+  }
+
+  if (role === "parent") return <ParentDashboardPage />;
   if (role === "student") return <StudentDashboard />;
-  if (role === "parent") return <ParentDashboard />;
   return <TeacherDashboard />;
 }

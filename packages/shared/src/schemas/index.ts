@@ -227,3 +227,11 @@ export const classroomFeedFilterSchema = z.object({
   cursor: z.string().optional(),
   limit: z.coerce.number().int().min(1).max(50).default(20),
 });
+
+/* ── Parent dashboard schemas ── */
+export {
+  parentStudentOverviewSchema,
+  parentScoreTrendSchema,
+  parentActivitySchema,
+  parentHistorySchema,
+} from "./parent-schemas.js";
