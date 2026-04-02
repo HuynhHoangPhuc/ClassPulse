@@ -1,6 +1,6 @@
 # System Architecture — Teaching Platform
 
-**Current Phase:** Phase 7 Complete (Real-time Notifications)
+**Current Phase:** Phase 8 Complete (Parent Dashboard)
 
 ---
 
@@ -182,6 +182,14 @@ Hono App (src/index.ts)
 │   │   ├── GET /unread-count — Get unread notification count
 │   │   ├── PUT /:id — Mark single notification as read
 │   │   └── PUT /read-all — Mark all as read
+│   ├── /api/parent (Phase 8)
+│   │   ├── GET /students — List linked students
+│   │   ├── GET /students/:studentId/overview — KPIs + aggregated metrics
+│   │   ├── GET /students/:studentId/trend — Score trend (30 days)
+│   │   ├── GET /students/:studentId/tags — Per-tag performance accuracy
+│   │   ├── GET /students/:studentId/activity — Recent activity feed
+│   │   ├── GET /students/:studentId/history — Assessment history (paginated)
+│   │   └── GET /students/:studentId/classrooms — Classroom overview
 │   └── /api/upload
 │       ├── POST /image — Upload image asset
 │       └── GET /image/:id — Retrieve image
@@ -234,6 +242,17 @@ Hono App (src/index.ts)
 - `features/notifications/notification-item.tsx` — Individual notification card
 - `features/notifications/notification-toast.tsx` — Toast for new real-time events
 - `hooks/use-websocket.ts` — WebSocket connection hook with auto-reconnect + ping/pong
+
+### Parent Dashboard (Phase 8)
+- `features/dashboard/parent-dashboard-page.tsx` — Main dashboard layout with bento grid
+- `features/dashboard/student-selector.tsx` — Dropdown to switch between linked children
+- `features/dashboard/score-gauge-card.tsx` — Overall score KPI with radial gauge
+- `features/dashboard/score-trend-chart.tsx` — Line chart showing 30-day trend
+- `features/dashboard/tag-performance-chart.tsx` — Horizontal bar chart by tag accuracy
+- `features/dashboard/activity-feed.tsx` — Recent assessments & classroom join events
+- `features/dashboard/assessment-history-table.tsx` — Paginated table with expandable rows
+- `features/dashboard/classroom-overview-card.tsx` — Classroom summary with completion rate
+- `hooks/use-current-user.ts` — Current user profile hook
 
 ### UI Components (Reusable)
 - `ui/card.tsx` — Card container (bento grid building block)

@@ -1,7 +1,7 @@
 ---
 title: "Teaching Platform"
 description: "Web-based teaching platform with question bank, assessment auto-generation, classrooms, real-time notifications, and parent dashboard on Cloudflare free tier"
-status: in-progress
+status: complete
 priority: P1
 effort: 80h
 tags: [feature, fullstack, cloudflare, education]
@@ -38,7 +38,7 @@ Build multi-role (teacher/student/parent) teaching platform. Hono API on CF Work
 | 5 | [Assessment Taking](./phase-05-assessment-taking.md) | Complete | 10h | Phase 3, 4 |
 | 6 | [Comments & Mentions](./phase-06-comments-mentions.md) | Complete | 8h | Phase 4 |
 | 7 | [Real-time Notifications](./phase-07-realtime-notifications.md) | Complete | 8h | Phase 6 |
-| 8 | [Parent Dashboard](./phase-08-parent-dashboard.md) | Pending | 8h | Phase 5 |
+| 8 | [Parent Dashboard](./phase-08-parent-dashboard.md) | Complete | 8h | Phase 5 |
 
 ## Dependency Graph
 

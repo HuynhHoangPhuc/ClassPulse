@@ -8,7 +8,7 @@
 ## Overview
 
 - **Priority**: P2
-- **Status**: Pending
+- **Status**: Complete
 - **Effort**: 8h
 - **Depends On**: Phase 5
 - **Description**: Parent-student linking, student activity feed, assessment metrics (avg score, trend, per-tag performance), classroom overview. Charts with Recharts.
@@ -154,19 +154,19 @@ GROUP BY t.id
 
 ## Todo
 
-- [ ] Implement parent-student linking logic
-- [ ] Create parent dashboard aggregation API endpoints
-- [ ] Build student selector component
-- [ ] Build KPI cards with gauge, trend badges
-- [ ] Build score trend line chart (Recharts)
-- [ ] Build tag performance bar chart (Recharts)
-- [ ] Build activity feed component
-- [ ] Build assessment history table with expandable rows
-- [ ] Build classroom overview cards
-- [ ] Wire parent role dashboard route
-- [ ] Add loading skeletons for charts
-- [ ] Add empty states ("No assessments taken yet")
-- [ ] Test responsive layout (mobile bento → single column)
+- [x] Implement parent-student linking logic
+- [x] Create parent dashboard aggregation API endpoints
+- [x] Build student selector component
+- [x] Build KPI cards with gauge, trend badges
+- [x] Build score trend line chart (Recharts)
+- [x] Build tag performance bar chart (Recharts)
+- [x] Build activity feed component
+- [x] Build assessment history table with expandable rows
+- [x] Build classroom overview cards
+- [x] Wire parent role dashboard route
+- [x] Add loading skeletons for charts
+- [x] Add empty states ("No assessments taken yet")
+- [x] Test responsive layout (mobile bento → single column)
 
 ## Success Criteria
 

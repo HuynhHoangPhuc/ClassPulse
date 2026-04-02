@@ -1,6 +1,6 @@
 # Code Standards — Teaching Platform
 
-**Phase:** Phase 7 Complete (Real-time Notifications)
+**Phase:** Phase 8 Complete (Parent Dashboard)
 
 Coding conventions and architectural patterns for maintaining consistency across the monorepo.
 
@@ -86,7 +86,7 @@ app.use("/api/*", async (c, next) => {
 - Service files in `src/services/` — encapsulate business logic
 - Naming: `{domain}-service.ts` for CRUD, `{domain}-query-service.ts` for complex reads, `{domain}-generator-service.ts` for generation logic
 - Keep route handlers thin: delegate to services for complex operations
-- Example services: `question-service.ts`, `assessment-service.ts`, `assessment-query-service.ts`, `assessment-generator-service.ts`, `classroom-service.ts`, `classroom-member-service.ts`, `realtime-service.ts` (Phase 7)
+- Example services: `question-service.ts`, `assessment-service.ts`, `assessment-query-service.ts`, `assessment-generator-service.ts`, `classroom-service.ts`, `classroom-member-service.ts`, `realtime-service.ts` (Phase 7), `parent-dashboard-service.ts` (Phase 8)
 
 ```typescript
 // src/services/assessment-service.ts (CRUD)
@@ -529,6 +529,7 @@ apps/api/src/
 │   ├── attempt-routes.ts                # POST start/save/submit + GET results/detail
 │   ├── notification-routes.ts           # GET/PUT /api/notifications (Phase 7)
 │   ├── websocket-routes.ts              # GET /ws/classroom/:id WebSocket upgrade (Phase 7)
+│   ├── parent-routes.ts                 # GET /api/parent/* (Phase 8)
 │   ├── upload-route.ts                  # Image upload & retrieval
 │   └── ...
 ├── services/
@@ -544,6 +545,7 @@ apps/api/src/
 │   ├── attempt-service.ts               # Assessment attempt CRUD + submission logic
 │   ├── attempt-query-service.ts         # Complex attempt reads + student results
 │   ├── score-calculator-service.ts      # Score calculation logic
+│   ├── parent-dashboard-service.ts      # Parent dashboard aggregation queries (Phase 8)
 │   └── ...
 ├── lib/
 │   └── id-generator.ts                  # Custom ID generation
@@ -601,12 +603,22 @@ apps/web/src/
 │   │   ├── results-page.tsx                # Score + explanations after submit
 │   │   ├── teacher-submission-viewer.tsx   # View student submissions + tab-switch counts
 │   │   └── ...
-│   └── notifications/                   # Real-time notifications (Phase 7)
-│       ├── notification-provider.tsx     # Context + WebSocket management
-│       ├── notification-bell.tsx         # Header bell with unread badge
-│       ├── notification-panel.tsx        # Dropdown notification list
-│       ├── notification-item.tsx         # Individual notification card
-│       ├── notification-toast.tsx        # Toast for new events
+│   ├── notifications/                   # Real-time notifications (Phase 7)
+│   │   ├── notification-provider.tsx     # Context + WebSocket management
+│   │   ├── notification-bell.tsx         # Header bell with unread badge
+│   │   ├── notification-panel.tsx        # Dropdown notification list
+│   │   ├── notification-item.tsx         # Individual notification card
+│   │   ├── notification-toast.tsx        # Toast for new events
+│   │   └── ...
+│   └── dashboard/                       # Parent dashboard (Phase 8)
+│       ├── parent-dashboard-page.tsx     # Main dashboard layout
+│       ├── student-selector.tsx          # Student dropdown selector
+│       ├── score-gauge-card.tsx          # Overall score KPI gauge
+│       ├── score-trend-chart.tsx         # Line chart (30 days)
+│       ├── tag-performance-chart.tsx     # Horizontal bar chart by tag
+│       ├── activity-feed.tsx             # Recent activity list
+│       ├── assessment-history-table.tsx  # Paginated table with expand
+│       ├── classroom-overview-card.tsx   # Classroom summary cards
 │       └── ...
 ├── components/
 │   ├── layout/
