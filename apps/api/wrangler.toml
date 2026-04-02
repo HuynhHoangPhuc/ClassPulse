@@ -20,7 +20,7 @@ bindings = [
 
 [[migrations]]
 tag = "v1"
-new_classes = ["NotificationHub"]
+new_sqlite_classes = ["NotificationHub"]
 
 # All vars/secrets are managed via Cloudflare Dashboard (prod) or .dev.vars (local)
 # Required vars: CLERK_PUBLISHABLE_KEY, CORS_ORIGIN
