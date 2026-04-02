@@ -1,6 +1,6 @@
 # Code Standards — Teaching Platform
 
-**Phase:** Phase 2 Complete (Question Bank & Assessment Features)
+**Phase:** Phase 4 Complete (Assessment Bank & Classroom)
 
 Coding conventions and architectural patterns for maintaining consistency across the monorepo.
 
@@ -82,19 +82,26 @@ app.use("/api/*", async (c, next) => {
 });
 ```
 
-#### Services Layer (Phase 2+)
+#### Services Layer
 - Service files in `src/services/` — encapsulate business logic
-- Naming: `{domain}-service.ts`
+- Naming: `{domain}-service.ts` for CRUD, `{domain}-query-service.ts` for complex reads, `{domain}-generator-service.ts` for generation logic
 - Keep route handlers thin: delegate to services for complex operations
+- Example services: `question-service.ts`, `assessment-service.ts`, `assessment-query-service.ts`, `assessment-generator-service.ts`, `classroom-service.ts`, `classroom-member-service.ts`
 
 ```typescript
-// src/services/question-service.ts
-export async function createQuestion(data: CreateQuestion, teacherId: string) {
-  // Validate, insert, handle relations
+// src/services/assessment-service.ts (CRUD)
+export async function createAssessment(db, teacherId, data: CreateAssessment) {
+  // Insert assessment + assessmentQuestions with ordering
 }
 
-export async function buildQuestionFilters(teacherId: string, filters: QuestionFilter) {
-  // Build Drizzle query conditions
+// src/services/assessment-query-service.ts (Complex reads)
+export async function getAssessmentWithQuestions(db, assessmentId, teacherId) {
+  // Join with full question data
+}
+
+// src/services/assessment-generator-service.ts (Generation logic)
+export async function generateAssessment(db, teacherId, config: GenerateConfig) {
+  // AI generation or smart selection based on config
 }
 ```
 
@@ -503,44 +510,71 @@ export async function createAssessmentFromTemplate(
 ```
 apps/api/src/
 ├── db/
-│   └── schema.ts           # All Drizzle tables + types
+│   └── schema.ts                        # All Drizzle tables + types (17 tables)
 ├── middleware/
-│   ├── auth-middleware.ts  # JWT verification
-│   ├── error-middleware.ts # Error handling
-│   └── cors-middleware.ts  # CORS
+│   ├── auth-middleware.ts               # JWT verification
+│   ├── error-middleware.ts              # Error handling
+│   └── cors-middleware.ts               # CORS
 ├── routes/
-│   ├── users-route.ts      # GET /api/users, PATCH /api/users
-│   ├── questions-route.ts  # CRUD + filtering for questions
-│   ├── tags-route.ts       # CRUD for tags
-│   ├── upload-route.ts     # Image upload & retrieval
+│   ├── users-route.ts                   # GET/PATCH /api/users
+│   ├── questions-route.ts               # CRUD + bulk import for questions
+│   ├── tags-route.ts                    # CRUD for tags
+│   ├── assessment-routes.ts             # GET/POST/PUT/DELETE /api/assessments + generate + preview
+│   ├── classroom-routes.ts              # GET/POST/PUT/DELETE /api/classrooms + regenerate-code
+│   ├── classroom-member-routes.ts       # GET/POST/DELETE /api/classrooms/:id/members
+│   ├── classroom-post-routes.ts         # GET/POST/PUT/DELETE /api/classrooms/:id/posts + comments
+│   ├── upload-route.ts                  # Image upload & retrieval
 │   └── ...
 ├── services/
-│   └── question-service.ts # Question business logic + helpers
+│   ├── question-service.ts              # Question CRUD + helpers
+│   ├── assessment-service.ts            # Assessment CRUD + duplicate
+│   ├── assessment-query-service.ts      # Assessment complex reads (with questions)
+│   ├── assessment-generator-service.ts  # Assessment auto-generation
+│   ├── classroom-service.ts             # Classroom CRUD + invite code management
+│   ├── classroom-member-service.ts      # Member management + role checks
+│   └── ...
 ├── lib/
-│   └── id-generator.ts     # Custom ID generation
-├── env.ts                  # Environment type definitions
-└── index.ts                # Hono app entry, exports AppType
+│   └── id-generator.ts                  # Custom ID generation
+├── env.ts                               # Environment type definitions
+└── index.ts                             # Hono app entry, exports AppType
 ```
 
 ### Root `src/` Structure (Web)
 ```
 apps/web/src/
 ├── routes/
-│   ├── router.ts           # Router definition
-│   ├── root-route.tsx      # Layout outlet
-│   ├── login-route.tsx     # Public login
-│   ├── authed-layout.tsx   # Protected layout
-│   ├── dashboard-route.tsx # Main dashboard
-│   ├── questions-routes.tsx # Question bank routes
+│   ├── router.ts                    # Router definition
+│   ├── root-route.tsx               # Layout outlet
+│   ├── login-route.tsx              # Public login
+│   ├── authed-layout.tsx            # Protected layout
+│   ├── dashboard-route.tsx          # Main dashboard
+│   ├── questions-routes.tsx         # Question bank routes
+│   ├── assessments-routes.tsx       # Assessment routes
+│   ├── classrooms-routes.tsx        # Classroom routes
 │   └── ...
 ├── features/
-│   └── questions/          # Question bank feature module
-│       ├── question-list-page.tsx
-│       ├── question-editor-page.tsx
-│       ├── question-card.tsx
-│       ├── question-filter-panel.tsx
-│       ├── tag-selector.tsx
-│       └── image-upload-button.tsx
+│   ├── questions/                   # Question bank feature module
+│   │   ├── question-list-page.tsx
+│   │   ├── question-editor-page.tsx
+│   │   └── ...
+│   ├── assessments/                 # Assessment feature module (Phase 3)
+│   │   ├── assessment-list-page.tsx
+│   │   ├── assessment-wizard-page.tsx      # 3-step creation wizard
+│   │   ├── assessment-preview-page.tsx
+│   │   ├── question-picker.tsx
+│   │   ├── auto-gen-config.tsx
+│   │   ├── wizard-step-*.tsx
+│   │   └── ...
+│   └── classrooms/                  # Classroom feature module (Phase 4)
+│       ├── classroom-list-page.tsx
+│       ├── classroom-detail-page.tsx       # 4-tab layout (Feed/Members/Assessments/Settings)
+│       ├── classroom-feed-tab.tsx
+│       ├── classroom-members-tab.tsx
+│       ├── classroom-assessments-tab.tsx
+│       ├── classroom-settings-tab.tsx
+│       ├── post-composer.tsx
+│       ├── add-member-dialog.tsx
+│       └── ...
 ├── components/
 │   ├── layout/
 │   │   ├── app-shell.tsx
@@ -553,10 +587,10 @@ apps/web/src/
 │       ├── page-header.tsx
 │       └── empty-state.tsx
 ├── lib/
-│   ├── api-client.ts       # Hono RPC client
-│   └── utils.ts            # Helper functions
-├── app.tsx                 # Root component
-└── main.tsx                # Vite entry
+│   ├── api-client.ts                # Hono RPC client
+│   └── utils.ts                     # Helper functions
+├── app.tsx                          # Root component
+└── main.tsx                         # Vite entry
 ```
 
 ---

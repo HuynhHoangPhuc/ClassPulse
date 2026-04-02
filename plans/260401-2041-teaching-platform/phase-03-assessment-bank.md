@@ -9,7 +9,7 @@
 ## Overview
 
 - **Priority**: P1
-- **Status**: Pending
+- **Status**: Complete
 - **Effort**: 12h
 - **Depends On**: Phase 2
 - **Description**: Assessment creation (manual + auto-generation), multi-step wizard UI, scoring configuration, assessment preview, duplication.
@@ -167,17 +167,17 @@ Penalty: -0.5 incorrect         Return {questions, shortfalls, config}
 
 ## Todo
 
-- [ ] Create assessment CRUD API endpoints
-- [ ] Implement auto-generation algorithm with shortfall warnings
-- [ ] Create assessment list page with type filter
-- [ ] Build multi-step creation wizard
-- [ ] Build question picker (manual selection)
-- [ ] Build auto-gen config UI (tag/complexity distribution editor)
-- [ ] Build distribution bar component
-- [ ] Build assessment preview page (student-view simulation)
-- [ ] Implement assessment duplication
-- [ ] Add wizard state persistence (sessionStorage)
-- [ ] Test auto-generation with edge cases (insufficient questions, rounding)
+- [x] Create assessment CRUD API endpoints
+- [x] Implement auto-generation algorithm with shortfall warnings
+- [x] Create assessment list page with type filter
+- [x] Build multi-step creation wizard
+- [x] Build question picker (manual selection)
+- [x] Build auto-gen config UI (tag/complexity distribution editor)
+- [x] Build distribution bar component
+- [x] Build assessment preview page (student-view simulation)
+- [x] Implement assessment duplication
+- [x] Add wizard state persistence (sessionStorage)
+- [x] Test auto-generation with edge cases (insufficient questions, rounding)
 
 ## Success Criteria
 

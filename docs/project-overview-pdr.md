@@ -1,8 +1,8 @@
 # Project Overview & PDR — Teaching Platform
 
-**Version:** 1.1 (Phase 2 Complete)  
+**Version:** 1.3 (Phase 4 Complete)  
 **Last Updated:** 2026-04-01  
-**Status:** Question Bank & Assessment Features Complete
+**Status:** Assessment Bank & Classroom Features Complete
 
 ---
 
@@ -33,6 +33,28 @@ Teaching Platform is a SaaS application for educators to create, manage, and gra
 - Bulk question import API
 - Form validation schemas (Zod)
 - Comprehensive question management UI
+
+**Phase 3 Deliverables (Complete - Assessment Bank):**
+- Assessment CRUD API with filtering & pagination
+- Assessment creation wizard (3 steps: info, question selection, settings)
+- Assessment auto-generation API with AI config
+- Assessment preview (student-facing view)
+- Assessment duplication/cloning
+- Question picker with advanced search & filters
+- Auto-generation config UI component
+- Assessment list page with sorting/pagination
+
+**Phase 4 Deliverables (Complete - Classroom):**
+- Classroom CRUD API (create, read, list, update, delete, archive)
+- Classroom member management API (add/remove/role updates)
+- Invite code generation & regeneration
+- Classroom post/feed API (announcements, assignment posts)
+- Post creation with threading
+- Comment system with @mention support
+- Classroom detail page with 4 tabs (Feed, Members, Assessments, Settings)
+- Member management dialog (add students/parents, manage roles)
+- Post composer & feed rendering
+- Settings tab for classroom configuration
 
 ---
 
@@ -123,20 +145,31 @@ Empower educators with intuitive assessment tools that reduce administrative bur
 - [x] Bulk question import API (POST /api/questions/bulk)
 - [x] API endpoints: Full CRUD for questions and tags
 - [x] Form validation schemas (Zod)
-- [ ] Assessment creation wizard (manual question selection + auto-generate option)
-- [ ] Assessment preview (student-facing view)
+
+### Phase 3: Assessment Bank (COMPLETE)
+- [x] Assessment creation wizard (manual question selection + auto-generate option)
+- [x] Assessment preview (student-facing view)
+- [x] Assessment CRUD API (GET/POST/PUT/DELETE /api/assessments)
+- [x] Assessment auto-generation API (POST /api/assessments/generate)
+- [x] Assessment duplication (POST /api/assessments/:id/duplicate)
+- [x] Assessment filtering & pagination
+- [x] Question picker with advanced search
+- [x] Auto-gen config UI
 - [ ] Assessment taking interface (timer, navigation, flag for review)
 - [ ] Auto-submit on time limit
 - [ ] Immediate result display (if show_results = "immediately")
 
-### Phase 3: Classroom & Communication
-- [ ] Classroom management (create, invite members, manage roles)
-- [ ] Classroom feed (announcements, assignment posts)
-- [ ] Comments & threading (reply to posts, mention @users)
+### Phase 4: Classroom & Communication (COMPLETE)
+- [x] Classroom management (create, invite members, manage roles)
+- [x] Classroom feed (announcements, assignment posts)
+- [x] Comments & threading (reply to posts, mention @users)
+- [x] Member management (add/remove students, parents)
+- [x] Invite code generation & sharing
+- [x] API endpoints: CRUD for classrooms, posts, comments, members
+- [x] Classroom detail page with 4 tabs (Feed, Members, Assessments, Settings)
+- [x] Post composer & feed rendering
 - [ ] Notifications system (comments, submissions, assignments)
-- [ ] Member management (add/remove students, parents)
-- [ ] Invite code generation & sharing
-- [ ] API endpoints: CRUD for classrooms, posts, comments, notifications
+- [ ] WebSocket real-time feed updates
 
 ### Phase 4: Advanced Features
 - [ ] Parent dashboards (metrics, trend graphs, student selector)
@@ -264,11 +297,11 @@ Empower educators with intuitive assessment tools that reduce administrative bur
 - Monorepo + deployment pipeline
 - API scaffold + auth
 - Web shell + routing
-- Database schema
+- Database schema (15 tables)
 - Documentation
 
 ### Phase 2: Core Assessment (COMPLETE)
-**Timeline:** Apr-May 2026  
+**Timeline:** Mar-Apr 2026  
 **Status:** Done  
 **Deliverables:**
 - Question CRUD API + bank UI with filters/search
@@ -279,28 +312,56 @@ Empower educators with intuitive assessment tools that reduce administrative bur
 - Question filtering by tags, complexity, search term
 - Form validation via Zod schemas
 
-### Phase 3: Classroom (Jun-Jul 2026)
+### Phase 3: Assessment Bank (COMPLETE)
+**Timeline:** Apr 2026  
+**Status:** Done  
+**Deliverables:**
+- Assessment CRUD API with filtering & pagination
+- 3-step creation wizard UI
+- Auto-generation API & config
+- Assessment preview page
+- Assessment duplication
+- Question picker component
+
+### Phase 4: Classroom (COMPLETE)
+**Timeline:** Apr 2026  
+**Status:** Done  
+**Deliverables:**
+- Classroom CRUD API
+- Member management API
+- Invite codes & invite code generation
+- Feed & posts API
+- Comments & threading API
+- Classroom detail page (4 tabs)
+- Post composer & feed UI
+- Member management dialog
+
+### Phase 5: Assessment Submission & Grading (Aug-Sep 2026)
 **Timeline:** 6 weeks  
 **Deliverables:**
-- Classroom management
-- Invite codes & member roles
-- Feed & announcements
-- Comments & threading
-- Notifications
+- Assessment taking interface (timer, navigation, flag for review)
+- Auto-submit on time limit
+- Immediate result display for auto-graded questions
+- Assessment attempt submission & storage
+- Answer recording per question
+- Student result page with explanations
 
-### Phase 4: Advanced (Aug-Oct 2026)
-**Timeline:** 12 weeks  
+### Phase 6: Analytics & Parent Dashboards (Oct-Nov 2026)
+**Timeline:** 6 weeks  
 **Deliverables:**
-- Parent dashboards
-- Teacher analytics
-- AI question generation
-- Manual grading
-- Student reports
-- WebSocket real-time
+- Parent dashboards (metrics, trend graphs, student selector)
+- Teacher analytics (performance by topic, comparison to class average)
+- Manual grading interface (for essay/short-answer questions)
+- Student progress reports (downloadable PDF)
+- Notification system (comments, submissions, assignments)
 
-### Phase 5: Polish & Launch (Nov-Dec 2026)
+### Phase 7: Advanced Features & Launch (Dec 2026)
 **Timeline:** 8 weeks  
 **Deliverables:**
+- AI question generation (OpenAI integration)
+- WebSocket real-time updates
+- Assessment editing with version history
+- Bulk operations (import questions from CSV, bulk assign)
 - Security audit
 - Performance optimization
 - Load testing

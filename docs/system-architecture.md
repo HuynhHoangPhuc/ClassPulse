@@ -1,6 +1,6 @@
 # System Architecture — Teaching Platform
 
-**Current Phase:** Phase 2 Complete (Question Bank & Assessment Features)
+**Current Phase:** Phase 4 Complete (Assessment Bank & Classroom)
 
 ---
 
@@ -78,7 +78,7 @@ teaching-platform/
 
 ---
 
-## 3. Database Schema (15 Tables)
+## 3. Database Schema (17 Tables, Phase 4)
 
 ### Core Users
 - **users** — User account data, roles (teacher/student/parent)
@@ -90,9 +90,10 @@ teaching-platform/
 - **questionTags** — Many-to-many linking questions to tags
 - **assessments** — Assessment metadata (title, type, scoring rules, AI generation config)
 - **assessmentQuestions** — Ordered list of questions per assessment with optional score overrides
+- **assessmentDuplicates** — Tracks assessment copies for deduplication
 
-### Classroom & Communication
-- **classrooms** — Classroom containers with invite codes
+### Classroom & Communication (Phase 4 Complete)
+- **classrooms** — Classroom containers with invite codes, description, settings
 - **classroomMembers** — Members + roles (teacher/student/parent) per classroom
 - **posts** — Feed items (announcements, assessment assignments with due dates)
 - **comments** — Post comments with threading (parent-child relationships)
@@ -135,6 +136,33 @@ Hono App (src/index.ts)
 │   │   ├── GET /:id — Get single question
 │   │   ├── PUT /:id — Update question
 │   │   └── DELETE /:id — Delete question
+│   ├── /api/assessments
+│   │   ├── GET / — List assessments (filtered, paginated)
+│   │   ├── POST / — Create assessment (manual with questions list)
+│   │   ├── POST /generate — Auto-generate assessment with AI
+│   │   ├── GET /:id — Get assessment with questions
+│   │   ├── PUT /:id — Update assessment
+│   │   ├── DELETE /:id — Delete assessment
+│   │   ├── POST /:id/duplicate — Clone assessment
+│   │   └── GET /:id/preview — Student-facing assessment preview
+│   ├── /api/classrooms
+│   │   ├── GET / — List user's classrooms
+│   │   ├── POST / — Create classroom (teacher only)
+│   │   ├── GET /:id — Get classroom detail
+│   │   ├── PUT /:id — Update classroom (teacher only)
+│   │   ├── DELETE /:id — Archive classroom (teacher only)
+│   │   └── POST /:id/regenerate-code — Regenerate invite code
+│   ├── /api/classrooms/:id/members
+│   │   ├── GET / — List classroom members
+│   │   ├── POST / — Add member (teacher/invite code only)
+│   │   ├── DELETE /:memberId — Remove member (teacher only)
+│   │   └── PUT /:memberId — Update member role (teacher only)
+│   ├── /api/classrooms/:id/posts
+│   │   ├── GET / — List feed (paginated, filtered)
+│   │   ├── POST / — Create post (announcement or assignment)
+│   │   ├── PUT /:postId — Update post (author only)
+│   │   ├── DELETE /:postId — Delete post (author only)
+│   │   └── GET /:postId/comments — List comments with threading
 │   └── /api/upload
 │       ├── POST /image — Upload image asset
 │       └── GET /image/:id — Retrieve image
@@ -304,9 +332,25 @@ pnpm run typecheck                # Type-check all (turborepo)
 
 ---
 
-## 12. Integration Points (Phase 3+)
+## 12. Frontend Routes & Features
 
-### Planned Features
+### Phase 3 — Assessment Bank (Complete)
+- `/assessments` — List page with filtering, sorting, pagination
+- `/assessments/create` — 3-step wizard (basic info, question selection, settings)
+- `/assessments/:id/preview` — Student-facing assessment preview
+- `/assessments/:id/edit` — Edit assessment details
+- Features: Question picker with search/filter, auto-gen config, duplicate, pagination
+
+### Phase 4 — Classroom (Complete)
+- `/classrooms` — List classrooms with create button
+- `/classrooms/:id` — Detail page with 4 tabs:
+  - **Feed** — Posts (announcements, assignments) with comments & threading
+  - **Members** — Add/remove students/parents, manage roles
+  - **Assessments** — List classroom assessments, assign new ones
+  - **Settings** — Edit name/description, regenerate invite code
+- Features: Invite codes, member management, post composer, comment threading
+
+### Planned Features (Phase 5+)
 1. **Assessment grading** — Auto-grade MCQ, manual grading for essays
 2. **AI question generation** — OpenAI API integration
 3. **Real-time sync** — WebSocket for live notifications, assessment updates

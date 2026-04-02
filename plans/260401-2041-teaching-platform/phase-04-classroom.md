@@ -8,7 +8,7 @@
 ## Overview
 
 - **Priority**: P1
-- **Status**: Pending
+- **Status**: Complete
 - **Effort**: 10h
 - **Depends On**: Phase 1
 - **Description**: Classroom CRUD, member management (teacher adds students/parents), announcement posts, assessment assignment, unified classroom feed.
@@ -154,17 +154,17 @@ DELETE /api/classrooms/:id/posts/:postId — Delete post
 
 ## Todo
 
-- [ ] Create classroom CRUD API with invite code generation
-- [ ] Create member management API (add by email, remove)
-- [ ] Create post/feed API (announcements + assessment assignments)
-- [ ] Build classroom list page with create dialog
-- [ ] Build classroom detail page with tab navigation
-- [ ] Build feed tab with post composer and post cards
-- [ ] Build members tab with add/remove functionality
-- [ ] Build assessments tab (completion overview)
-- [ ] Build settings tab (edit, regenerate code, archive)
-- [ ] Add authorization checks per role per action
-- [ ] Add empty states for each tab
+- [x] Create classroom CRUD API with invite code generation
+- [x] Create member management API (add by email, remove)
+- [x] Create post/feed API (announcements + assessment assignments)
+- [x] Build classroom list page with create dialog
+- [x] Build classroom detail page with tab navigation
+- [x] Build feed tab with post composer and post cards
+- [x] Build members tab with add/remove functionality
+- [x] Build assessments tab (completion overview)
+- [x] Build settings tab (edit, regenerate code, archive)
+- [x] Add authorization checks per role per action
+- [x] Add empty states for each tab
 
 ## Success Criteria
 
