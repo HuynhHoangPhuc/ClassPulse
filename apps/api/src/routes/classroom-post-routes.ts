@@ -1,13 +1,14 @@
 import { Hono } from "hono";
 import { drizzle } from "drizzle-orm/d1";
 import { eq, and, sql } from "drizzle-orm";
-import { posts, users, assessments } from "../db/schema.js";
+import { posts, users, assessments, comments, commentMentions } from "../db/schema.js";
 import type { Env } from "../env.js";
 import { createPostSchema, updatePostSchema, classroomFeedFilterSchema } from "@teaching/shared";
 import { isClassroomTeacher, isClassroomMember } from "../services/classroom-service.js";
 import { generateId } from "../lib/id-generator.js";
 import { attemptFilterSchema } from "@teaching/shared";
 import { listSubmissions } from "../services/attempt-query-service.js";
+import { getCommentCounts } from "../services/comment-service.js";
 
 type Variables = { userId: string };
 const classroomPostRoutes = new Hono<Env & { Variables: Variables }>();
@@ -72,11 +73,16 @@ classroomPostRoutes.get("/:id/feed", async (c) => {
     for (const row of rows) assessmentMap[row.id] = { title: row.title, timeLimitMinutes: row.timeLimitMinutes };
   }
 
+  // Batch fetch comment counts (avoids N+1)
+  const postIds = items.map((p) => p.id);
+  const commentCountMap = await getCommentCounts(db, postIds);
+
   const enriched = items.map((post) => ({
     ...post,
     assessment: (post.type === "assessment_assignment" && post.assessmentId)
       ? assessmentMap[post.assessmentId] ?? null
       : null,
+    commentCount: commentCountMap[post.id] ?? 0,
   }));
 
   return c.json({ items: enriched, nextCursor });
@@ -171,6 +177,16 @@ classroomPostRoutes.delete("/:id/posts/:postId", async (c) => {
   const isTeacher = await isClassroomTeacher(db, classroomId, userId);
   if (existing.authorId !== userId && !isTeacher) {
     return c.json({ error: "Not authorized to delete this post" }, 403);
+  }
+
+  // Clean up comments and mentions before deleting post
+  const postComments = await db.select({ id: comments.id }).from(comments).where(eq(comments.postId, postId));
+  if (postComments.length > 0) {
+    const commentIds = postComments.map((c) => c.id);
+    await db.delete(commentMentions).where(
+      sql`${commentMentions.commentId} IN (${sql.join(commentIds.map((id) => sql`${id}`), sql`, `)})`,
+    );
+    await db.delete(comments).where(eq(comments.postId, postId));
   }
 
   await db.delete(posts).where(eq(posts.id, postId));

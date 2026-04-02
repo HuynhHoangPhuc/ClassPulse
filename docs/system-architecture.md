@@ -1,6 +1,6 @@
 # System Architecture — Teaching Platform
 
-**Current Phase:** Phase 4 Complete (Assessment Bank & Classroom)
+**Current Phase:** Phase 5 Complete (Student Assessment Taking)
 
 ---
 
@@ -78,7 +78,7 @@ teaching-platform/
 
 ---
 
-## 3. Database Schema (17 Tables, Phase 4)
+## 3. Database Schema (17 Tables, Phase 5)
 
 ### Core Users
 - **users** — User account data, roles (teacher/student/parent)
@@ -162,7 +162,19 @@ Hono App (src/index.ts)
 │   │   ├── POST / — Create post (announcement or assignment)
 │   │   ├── PUT /:postId — Update post (author only)
 │   │   ├── DELETE /:postId — Delete post (author only)
-│   │   └── GET /:postId/comments — List comments with threading
+│   │   └── /posts/:postId/comments
+│   │       ├── GET / — List threaded comments with author info
+│   │       ├── POST / — Create comment with @mention extraction
+│   │       ├── PUT /:commentId — Update comment (author only)
+│   │       └── DELETE /:commentId — Delete comment (author only, cascade to mentions)
+│   ├── /api/classrooms/:id/members/search
+│   │   └── GET / — Search classroom members by name (for @mention autocomplete)
+│   ├── /api/attempts (Phase 5)
+│   │   ├── POST /start — Start assessment attempt
+│   │   ├── POST /:attemptId/save — Save current progress
+│   │   ├── POST /:attemptId/submit — Submit assessment (atomic, no resubmit)
+│   │   ├── GET /:attemptId/results — Get scores + explanations
+│   │   └── GET /:attemptId/detail — Get detailed attempt with all answers
 │   └── /api/upload
 │       ├── POST /image — Upload image asset
 │       └── GET /image/:id — Retrieve image
@@ -350,11 +362,14 @@ pnpm run typecheck                # Type-check all (turborepo)
   - **Settings** — Edit name/description, regenerate invite code
 - Features: Invite codes, member management, post composer, comment threading
 
-### Planned Features (Phase 5+)
-1. **Assessment grading** — Auto-grade MCQ, manual grading for essays
+### Completed Features
+- **Phase 5: Assessment Taking** — Timed assessment interface, auto-save, anti-cheat tab detection, server-validated timer with 5s grace, seeded question/option shuffle, score calculation with custom per-question scores/penalties. Teacher submission viewer with tab-switch counts.
+
+### Planned Features (Phase 6+)
+1. **Analytics & Parent Dashboards** — Teacher performance by topic, parent view of child progress
 2. **AI question generation** — OpenAI API integration
 3. **Real-time sync** — WebSocket for live notifications, assessment updates
-4. **Analytics dashboard** — Teacher performance insights
+4. **Manual grading** — Teacher interface for essay/short-answer questions
 5. **Student reporting** — Downloadable assessment transcripts
 6. **Mobile app** — React Native version sharing shared package
 

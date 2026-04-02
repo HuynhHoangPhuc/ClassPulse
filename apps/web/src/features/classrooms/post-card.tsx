@@ -1,9 +1,11 @@
 import { Badge } from "@/components/ui/badge";
 import { Clock, FileText } from "lucide-react";
+import { CommentSection } from "./comment-section";
 
 interface PostCardProps {
   post: {
     id: string;
+    classroomId: string;
     type: string;
     title: string;
     content: string | null;
@@ -13,7 +15,10 @@ interface PostCardProps {
     createdAt: number;
     dueDate: number | null;
     assessment: { title: string; timeLimitMinutes: number | null } | null;
+    commentCount: number;
   };
+  currentUserId: string;
+  isTeacher: boolean;
 }
 
 function timeAgo(ts: number): string {
@@ -27,7 +32,7 @@ function timeAgo(ts: number): string {
   return `${days}d ago`;
 }
 
-export function PostCard({ post }: PostCardProps) {
+export function PostCard({ post, currentUserId, isTeacher }: PostCardProps) {
   const isAssignment = post.type === "assessment_assignment";
 
   return (
@@ -97,6 +102,15 @@ export function PostCard({ post }: PostCardProps) {
           </div>
         </div>
       )}
+
+      {/* Comments */}
+      <CommentSection
+        postId={post.id}
+        classroomId={post.classroomId}
+        commentCount={post.commentCount}
+        currentUserId={currentUserId}
+        isTeacher={isTeacher}
+      />
     </div>
   );
 }

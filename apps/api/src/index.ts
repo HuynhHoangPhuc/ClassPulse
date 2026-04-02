@@ -12,6 +12,7 @@ import { classroomRoutes } from "./routes/classroom-routes.js";
 import { classroomMemberRoutes } from "./routes/classroom-member-routes.js";
 import { classroomPostRoutes } from "./routes/classroom-post-routes.js";
 import { attemptRoutes } from "./routes/attempt-routes.js";
+import { commentRoutes } from "./routes/comment-routes.js";
 
 type Variables = { userId: string };
 
@@ -39,7 +40,8 @@ const routes = app
   .route("/api/classrooms", classroomRoutes)
   .route("/api/classrooms", classroomMemberRoutes)
   .route("/api/classrooms", classroomPostRoutes)
-  .route("/api/attempts", attemptRoutes);
+  .route("/api/attempts", attemptRoutes)
+  .route("/api", commentRoutes);
 
 // ── Health check ───────────────────────────────────────────────────────────────
 app.get("/health", (c) => c.json({ status: "ok" }));

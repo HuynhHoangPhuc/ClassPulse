@@ -1,6 +1,6 @@
 # Code Standards — Teaching Platform
 
-**Phase:** Phase 4 Complete (Assessment Bank & Classroom)
+**Phase:** Phase 5 Complete (Student Assessment Taking)
 
 Coding conventions and architectural patterns for maintaining consistency across the monorepo.
 
@@ -522,7 +522,9 @@ apps/api/src/
 │   ├── assessment-routes.ts             # GET/POST/PUT/DELETE /api/assessments + generate + preview
 │   ├── classroom-routes.ts              # GET/POST/PUT/DELETE /api/classrooms + regenerate-code
 │   ├── classroom-member-routes.ts       # GET/POST/DELETE /api/classrooms/:id/members
-│   ├── classroom-post-routes.ts         # GET/POST/PUT/DELETE /api/classrooms/:id/posts + comments
+│   ├── classroom-post-routes.ts         # GET/POST/PUT/DELETE /api/classrooms/:id/posts
+│   ├── comment-routes.ts                # GET/POST/PUT/DELETE /posts/:postId/comments + member search
+│   ├── attempt-routes.ts                # POST start/save/submit + GET results/detail (Phase 5)
 │   ├── upload-route.ts                  # Image upload & retrieval
 │   └── ...
 ├── services/
@@ -532,6 +534,11 @@ apps/api/src/
 │   ├── assessment-generator-service.ts  # Assessment auto-generation
 │   ├── classroom-service.ts             # Classroom CRUD + invite code management
 │   ├── classroom-member-service.ts      # Member management + role checks
+│   ├── comment-service.ts               # Comments CRUD + mention extraction + notifications
+│   ├── notification-service.ts          # Notification creation for mentions + submissions
+│   ├── attempt-service.ts               # Assessment attempt CRUD + submission logic (Phase 5)
+│   ├── attempt-query-service.ts         # Complex attempt reads + student results (Phase 5)
+│   ├── score-calculator-service.ts      # Score calculation logic (Phase 5)
 │   └── ...
 ├── lib/
 │   └── id-generator.ts                  # Custom ID generation
@@ -565,15 +572,29 @@ apps/web/src/
 │   │   ├── auto-gen-config.tsx
 │   │   ├── wizard-step-*.tsx
 │   │   └── ...
-│   └── classrooms/                  # Classroom feature module (Phase 4)
-│       ├── classroom-list-page.tsx
-│       ├── classroom-detail-page.tsx       # 4-tab layout (Feed/Members/Assessments/Settings)
-│       ├── classroom-feed-tab.tsx
-│       ├── classroom-members-tab.tsx
-│       ├── classroom-assessments-tab.tsx
-│       ├── classroom-settings-tab.tsx
-│       ├── post-composer.tsx
-│       ├── add-member-dialog.tsx
+│   ├── classrooms/                  # Classroom feature module (Phase 4)
+│   │   ├── classroom-list-page.tsx
+│   │   ├── classroom-detail-page.tsx       # 4-tab layout (Feed/Members/Assessments/Settings)
+│   │   ├── classroom-feed-tab.tsx
+│   │   ├── classroom-members-tab.tsx
+│   │   ├── classroom-assessments-tab.tsx
+│   │   ├── classroom-settings-tab.tsx
+│   │   ├── post-composer.tsx
+│   │   ├── post-card.tsx
+│   │   ├── comment-section.tsx             # Threaded comments display
+│   │   ├── comment-item.tsx                # Individual comment with author info
+│   │   ├── comment-input.tsx               # Text input with @mention autocomplete
+│   │   ├── mention-autocomplete.tsx        # Autocomplete dropdown for members
+│   │   ├── mention-renderer.tsx            # Renders @[Name](user_id) as linked mentions
+│   │   ├── add-member-dialog.tsx
+│   │   └── ...
+│   └── assessment-taking/              # Assessment taking feature (Phase 5)
+│       ├── taking-page.tsx                 # Full-screen taking interface
+│       ├── question-view.tsx               # Question display + answer input
+│       ├── countdown-timer.tsx             # Client-side countdown with grace period
+│       ├── question-grid.tsx               # Navigation grid showing question status
+│       ├── results-page.tsx                # Score + explanations after submit
+│       ├── teacher-submission-viewer.tsx   # View student submissions + tab-switch counts
 │       └── ...
 ├── components/
 │   ├── layout/

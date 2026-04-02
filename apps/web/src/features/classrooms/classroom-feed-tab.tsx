@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useAuth } from "@clerk/clerk-react";
+import { useAuth, useUser } from "@clerk/clerk-react";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { fetchApi } from "@/lib/fetch-api";
 import { PostComposer } from "./post-composer";
@@ -7,6 +7,7 @@ import { PostCard } from "./post-card";
 
 interface FeedPost {
   id: string;
+  classroomId: string;
   type: string;
   title: string;
   content: string | null;
@@ -16,6 +17,7 @@ interface FeedPost {
   createdAt: number;
   dueDate: number | null;
   assessment: { title: string; timeLimitMinutes: number | null } | null;
+  commentCount: number;
 }
 
 interface ClassroomFeedTabProps {
@@ -25,6 +27,8 @@ interface ClassroomFeedTabProps {
 
 export function ClassroomFeedTab({ classroomId, isTeacher }: ClassroomFeedTabProps) {
   const { getToken } = useAuth();
+  const { user } = useUser();
+  const currentUserId = user?.id ?? "";
   const queryClient = useQueryClient();
   const [cursor, setCursor] = useState<string | undefined>();
   const [allPosts, setAllPosts] = useState<FeedPost[]>([]);
@@ -82,7 +86,7 @@ export function ClassroomFeedTab({ classroomId, isTeacher }: ClassroomFeedTabPro
 
       {/* Post list */}
       {posts.map((post) => (
-        <PostCard key={post.id} post={post} />
+        <PostCard key={post.id} post={post} currentUserId={currentUserId} isTeacher={isTeacher} />
       ))}
 
       {/* Load more */}

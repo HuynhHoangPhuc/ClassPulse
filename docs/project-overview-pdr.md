@@ -1,8 +1,8 @@
 # Project Overview & PDR — Teaching Platform
 
-**Version:** 1.3 (Phase 4 Complete)  
-**Last Updated:** 2026-04-01  
-**Status:** Assessment Bank & Classroom Features Complete
+**Version:** 1.4 (Phase 5 Complete)  
+**Last Updated:** 2026-04-02  
+**Status:** Student Assessment Taking Complete
 
 ---
 
@@ -55,6 +55,18 @@ Teaching Platform is a SaaS application for educators to create, manage, and gra
 - Member management dialog (add students/parents, manage roles)
 - Post composer & feed rendering
 - Settings tab for classroom configuration
+
+**Phase 5 Deliverables (Complete - Assessment Taking):**
+- Assessment taking interface with timer (countdown, grace period handling)
+- Anti-cheat detection (tab-switch tracking)
+- Auto-save during attempt (progress checkpoints)
+- Seeded question/option shuffle (reproducible randomization)
+- Score calculation with custom per-question scores/penalties
+- Immediate result display with explanations
+- Teacher submission viewer with tab-switch counts
+- Assessment attempt start/save/submit endpoints (atomic, no resubmit)
+- Results and detail endpoints for students/teachers
+- Migration: tab_switch_count, question_order columns + composite index
 
 ---
 
@@ -155,9 +167,6 @@ Empower educators with intuitive assessment tools that reduce administrative bur
 - [x] Assessment filtering & pagination
 - [x] Question picker with advanced search
 - [x] Auto-gen config UI
-- [ ] Assessment taking interface (timer, navigation, flag for review)
-- [ ] Auto-submit on time limit
-- [ ] Immediate result display (if show_results = "immediately")
 
 ### Phase 4: Classroom & Communication (COMPLETE)
 - [x] Classroom management (create, invite members, manage roles)
@@ -168,18 +177,29 @@ Empower educators with intuitive assessment tools that reduce administrative bur
 - [x] API endpoints: CRUD for classrooms, posts, comments, members
 - [x] Classroom detail page with 4 tabs (Feed, Members, Assessments, Settings)
 - [x] Post composer & feed rendering
-- [ ] Notifications system (comments, submissions, assignments)
-- [ ] WebSocket real-time feed updates
 
-### Phase 4: Advanced Features
+### Phase 5: Assessment Taking (COMPLETE)
+- [x] Assessment taking interface (timer, countdown with grace period)
+- [x] Anti-cheat tab-switch detection & tracking
+- [x] Auto-save during attempt
+- [x] Seeded question/option shuffle
+- [x] Score calculation with custom per-question scoring
+- [x] Immediate result display with explanations
+- [x] Assessment start/save/submit endpoints
+- [x] Atomic submit guard (prevent resubmit)
+- [x] Teacher submission viewer with tab-switch counts
+- [x] Assessment results & detail endpoints
+
+### Phase 6+: Advanced Features
 - [ ] Parent dashboards (metrics, trend graphs, student selector)
 - [ ] Teacher analytics (performance by topic, comparison to class average)
+- [ ] Notifications system (comments, submissions, assignments)
+- [ ] WebSocket real-time feed updates
 - [ ] AI question generation (OpenAI integration)
 - [ ] Manual grading interface (for essay/short-answer questions)
 - [ ] Assessment editing with version history
 - [ ] Bulk operations (import questions from CSV, bulk assign)
 - [ ] Student progress reports (downloadable PDF)
-- [ ] WebSocket real-time updates
 
 ---
 
@@ -336,15 +356,18 @@ Empower educators with intuitive assessment tools that reduce administrative bur
 - Post composer & feed UI
 - Member management dialog
 
-### Phase 5: Assessment Submission & Grading (Aug-Sep 2026)
-**Timeline:** 6 weeks  
+### Phase 5: Assessment Taking (COMPLETE)
+**Timeline:** Apr 2026  
+**Status:** Done  
 **Deliverables:**
-- Assessment taking interface (timer, navigation, flag for review)
-- Auto-submit on time limit
-- Immediate result display for auto-graded questions
-- Assessment attempt submission & storage
-- Answer recording per question
-- Student result page with explanations
+- Assessment taking interface with timer and auto-save
+- Anti-cheat tab-switch detection
+- Seeded question/option shuffle
+- Score calculation with custom per-question scoring
+- Immediate result display with explanations
+- Teacher submission viewer
+- Assessment start/save/submit/results/detail endpoints
+- Atomic submit guard (no resubmit)
 
 ### Phase 6: Analytics & Parent Dashboards (Oct-Nov 2026)
 **Timeline:** 6 weeks  

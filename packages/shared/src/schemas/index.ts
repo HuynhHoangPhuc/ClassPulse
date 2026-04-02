@@ -84,7 +84,7 @@ export const createPostSchema = z.object({
 export const createCommentSchema = z.object({
   postId: z.string(),
   parentCommentId: z.string().nullable().optional(),
-  content: z.string().min(1),
+  content: z.string().min(1).max(2000),
   mentionUserIds: z.array(z.string()).optional(),
 });
 
@@ -142,6 +142,11 @@ export const updatePostSchema = z.object({
   title: z.string().min(1).max(200).optional(),
   content: z.string().nullable().optional(),
   dueDate: z.number().nullable().optional(),
+});
+
+export const updateCommentSchema = z.object({
+  content: z.string().min(1).max(2000),
+  mentionUserIds: z.array(z.string()).optional(),
 });
 
 /* ── Bulk operations ── */

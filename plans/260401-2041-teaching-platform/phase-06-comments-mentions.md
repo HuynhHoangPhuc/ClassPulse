@@ -8,7 +8,7 @@
 ## Overview
 
 - **Priority**: P2
-- **Status**: Pending
+- **Status**: Complete
 - **Effort**: 8h
 - **Depends On**: Phase 4
 - **Description**: Threaded comments on classroom posts, @mention with autocomplete (classroom members), comment edit/delete, mention notifications stored in DB (real-time push in Phase 7).
@@ -134,18 +134,18 @@ Render: Display as styled link with user name
 
 ## Todo
 
-- [ ] Create comment CRUD API endpoints
-- [ ] Implement mention extraction from comment content
-- [ ] Create notification records on mention/reply
-- [ ] Create member search API for autocomplete
-- [ ] Build threaded comment section component
-- [ ] Build comment item with reply/edit/delete actions
-- [ ] Build comment input with @mention detection
-- [ ] Build mention autocomplete dropdown
-- [ ] Build mention renderer for display
-- [ ] Update post cards to show comment count
-- [ ] Test mention parsing with edge cases
-- [ ] Test authorization (edit own, teacher delete any)
+- [x] Create comment CRUD API endpoints
+- [x] Implement mention extraction from comment content
+- [x] Create notification records on mention/reply
+- [x] Create member search API for autocomplete
+- [x] Build threaded comment section component
+- [x] Build comment item with reply/edit/delete actions
+- [x] Build comment input with @mention detection
+- [x] Build mention autocomplete dropdown
+- [x] Build mention renderer for display
+- [x] Update post cards to show comment count
+- [x] Test mention parsing with edge cases
+- [x] Test authorization (edit own, teacher delete any)
 
 ## Success Criteria
 
