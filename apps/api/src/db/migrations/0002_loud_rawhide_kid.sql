@@ -1,0 +1,1 @@
+CREATE INDEX `parent_student_parent_student_idx` ON `parent_student` (`parent_id`,`student_id`);

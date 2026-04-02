@@ -15,6 +15,13 @@
       "when": 1775089502156,
       "tag": "0001_brief_carlie_cooper",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1775139704318,
+      "tag": "0002_loud_rawhide_kid",
+      "breakpoints": true
     }
   ]
 }

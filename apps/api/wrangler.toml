@@ -1,12 +1,13 @@
 name = "teaching-api"
 main = "src/index.ts"
-compatibility_date = "2024-09-25"
+compatibility_date = "2026-04-02"
 compatibility_flags = ["nodejs_compat"]
 
 [[d1_databases]]
 binding = "DB"
 database_name = "teaching-db"
-database_id = "local"
+database_id = "da67407a-abe8-4492-8d94-38041b279730"
+migrations_dir = "src/db/migrations"
 
 [[r2_buckets]]
 binding = "STORAGE"
@@ -21,7 +22,6 @@ bindings = [
 tag = "v1"
 new_classes = ["NotificationHub"]
 
-[vars]
-CLERK_PUBLISHABLE_KEY = ""
-CORS_ORIGIN = "http://localhost:5173"
-# CLERK_SECRET_KEY, CLERK_WEBHOOK_SECRET: use `wrangler secret put` or .dev.vars
+# All vars/secrets are managed via Cloudflare Dashboard (prod) or .dev.vars (local)
+# Required vars: CLERK_PUBLISHABLE_KEY, CORS_ORIGIN
+# Required secrets: CLERK_SECRET_KEY, CLERK_WEBHOOK_SECRET
