@@ -7,6 +7,11 @@ import { usersRoute, clerkWebhookRoute } from "./routes/users-route.js";
 import { tagsRoute } from "./routes/tags-route.js";
 import { questionsRoute } from "./routes/questions-route.js";
 import { uploadRoute } from "./routes/upload-route.js";
+import { assessmentRoutes } from "./routes/assessment-routes.js";
+import { classroomRoutes } from "./routes/classroom-routes.js";
+import { classroomMemberRoutes } from "./routes/classroom-member-routes.js";
+import { classroomPostRoutes } from "./routes/classroom-post-routes.js";
+import { attemptRoutes } from "./routes/attempt-routes.js";
 
 type Variables = { userId: string };
 
@@ -29,7 +34,12 @@ const routes = app
   .route("/api/users", usersRoute)
   .route("/api/tags", tagsRoute)
   .route("/api/questions", questionsRoute)
-  .route("/api/upload/image", uploadRoute);
+  .route("/api/upload/image", uploadRoute)
+  .route("/api/assessments", assessmentRoutes)
+  .route("/api/classrooms", classroomRoutes)
+  .route("/api/classrooms", classroomMemberRoutes)
+  .route("/api/classrooms", classroomPostRoutes)
+  .route("/api/attempts", attemptRoutes);
 
 // ── Health check ───────────────────────────────────────────────────────────────
 app.get("/health", (c) => c.json({ status: "ok" }));

@@ -3,11 +3,21 @@ import { rootRoute } from "./root-route";
 import { loginRoute } from "./login-route";
 import { authedLayout } from "./authed-layout";
 import { dashboardRoute } from "./dashboard-route";
+import { notificationsRoute } from "./placeholder-routes";
 import {
-  assessmentsRoute,
-  classroomsRoute,
-  notificationsRoute,
-} from "./placeholder-routes";
+  assessmentsListRoute,
+  assessmentNewRoute,
+  assessmentEditRoute,
+  assessmentPreviewRoute,
+  assessmentTakingRoute,
+  assessmentResultsRoute,
+  teacherSubmissionsRoute,
+  teacherSubmissionDetailRoute,
+} from "./assessment-routes";
+import {
+  classroomsListRoute,
+  classroomDetailRoute,
+} from "./classroom-routes";
 import {
   questionsRoute,
   questionNewRoute,
@@ -39,9 +49,17 @@ const routeTree = rootRoute.addChildren([
     questionsRoute,
     questionNewRoute,
     questionEditRoute,
-    assessmentsRoute,
-    classroomsRoute,
+    assessmentsListRoute,
+    assessmentNewRoute,
+    assessmentEditRoute,
+    assessmentPreviewRoute,
+    classroomsListRoute,
+    classroomDetailRoute,
     notificationsRoute,
+    assessmentTakingRoute,
+    assessmentResultsRoute,
+    teacherSubmissionsRoute,
+    teacherSubmissionDetailRoute,
   ]),
 ]);
 

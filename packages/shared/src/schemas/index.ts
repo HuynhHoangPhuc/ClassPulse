@@ -93,6 +93,16 @@ export const submitAnswerSchema = z.object({
   selectedOptionId: z.string(),
 });
 
+export const startAttemptSchema = z.object({
+  assessmentId: z.string(),
+  classroomId: z.string(),
+});
+
+export const attemptFilterSchema = z.object({
+  cursor: z.string().optional(),
+  limit: z.coerce.number().int().min(1).max(50).default(20),
+});
+
 /* ── Update schemas (partial versions of create schemas) ── */
 
 export const updateQuestionSchema = z.object({
@@ -107,6 +117,31 @@ export const updateQuestionSchema = z.object({
 export const updateTagSchema = z.object({
   name: z.string().min(1).max(50).optional(),
   color: hexColorSchema.nullable().optional(),
+});
+
+export const updateAssessmentSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
+  description: z.string().nullable().optional(),
+  type: assessmentTypeSchema.optional(),
+  timeLimitMinutes: z.number().int().positive().nullable().optional(),
+  scorePerCorrect: z.number().optional(),
+  penaltyPerIncorrect: z.number().optional(),
+  shuffleQuestions: z.boolean().optional(),
+  shuffleOptions: z.boolean().optional(),
+  showResults: showResultsSchema.optional(),
+  parentDetailView: parentDetailViewSchema.optional(),
+  questionIds: z.array(z.string()).min(1).optional(),
+});
+
+export const updateClassroomSchema = z.object({
+  name: z.string().min(1).max(100).optional(),
+  description: z.string().nullable().optional(),
+});
+
+export const updatePostSchema = z.object({
+  title: z.string().min(1).max(200).optional(),
+  content: z.string().nullable().optional(),
+  dueDate: z.number().nullable().optional(),
 });
 
 /* ── Bulk operations ── */
@@ -125,6 +160,65 @@ export const questionFilterSchema = z.object({
   complexityMax: z.coerce.number().int().min(1).max(5).optional(),
   complexityType: complexityTypeSchema.optional(),
   search: z.string().optional(),
+  cursor: z.string().optional(),
+  limit: z.coerce.number().int().min(1).max(50).default(20),
+});
+
+/* ── Assessment auto-generation config ── */
+
+const tagComplexityConfigSchema = z.object({
+  level: complexityLevelSchema,
+  percent: z.number().min(0).max(100),
+});
+
+const tagConfigSchema = z.object({
+  tagId: z.string(),
+  percent: z.number().min(0).max(100),
+  complexities: z.array(tagComplexityConfigSchema).min(1)
+    .refine(
+      (comps) => Math.round(comps.reduce((s, c) => s + c.percent, 0)) === 100,
+      { message: "Complexity percentages must sum to 100 per tag" }
+    ),
+});
+
+export const generateAssessmentSchema = z.object({
+  title: z.string().min(1).max(200),
+  description: z.string().nullable().optional(),
+  type: assessmentTypeSchema,
+  timeLimitMinutes: z.number().int().positive().nullable().optional(),
+  totalQuestions: z.number().int().min(1).max(200),
+  scorePerCorrect: z.number().default(1),
+  penaltyPerIncorrect: z.number().default(0),
+  shuffleQuestions: z.boolean().default(false),
+  shuffleOptions: z.boolean().default(false),
+  showResults: showResultsSchema.default("immediately"),
+  parentDetailView: parentDetailViewSchema.default("scores_only"),
+  tags: z.array(tagConfigSchema).min(1)
+    .refine(
+      (tags) => Math.round(tags.reduce((s, t) => s + t.percent, 0)) === 100,
+      { message: "Tag percentages must sum to 100" }
+    ),
+});
+
+/* ── Assessment list filters ── */
+
+export const assessmentFilterSchema = z.object({
+  type: assessmentTypeSchema.optional(),
+  search: z.string().optional(),
+  cursor: z.string().optional(),
+  limit: z.coerce.number().int().min(1).max(50).default(20),
+});
+
+/* ── Classroom member management ── */
+
+export const addMemberSchema = z.object({
+  email: z.string().email(),
+  role: z.enum(["student", "parent"]),
+});
+
+/* ── Classroom feed filters ── */
+
+export const classroomFeedFilterSchema = z.object({
   cursor: z.string().optional(),
   limit: z.coerce.number().int().min(1).max(50).default(20),
 });

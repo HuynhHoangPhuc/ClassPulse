@@ -33,9 +33,9 @@ Build multi-role (teacher/student/parent) teaching platform. Hono API on CF Work
 |-------|------|--------|--------|------------|
 | 1 | [Foundation & Project Setup](./phase-01-foundation.md) | Complete | 12h | — |
 | 2 | [Question Bank](./phase-02-question-bank.md) | Complete | 12h | Phase 1 |
-| 3 | [Assessment Bank](./phase-03-assessment-bank.md) | Pending | 12h | Phase 2 |
-| 4 | [Classroom](./phase-04-classroom.md) | Pending | 10h | Phase 1 |
-| 5 | [Assessment Taking](./phase-05-assessment-taking.md) | Pending | 10h | Phase 3, 4 |
+| 3 | [Assessment Bank](./phase-03-assessment-bank.md) | Complete | 12h | Phase 2 |
+| 4 | [Classroom](./phase-04-classroom.md) | Complete | 10h | Phase 1 |
+| 5 | [Assessment Taking](./phase-05-assessment-taking.md) | Complete | 10h | Phase 3, 4 |
 | 6 | [Comments & Mentions](./phase-06-comments-mentions.md) | Pending | 8h | Phase 4 |
 | 7 | [Real-time Notifications](./phase-07-realtime-notifications.md) | Pending | 8h | Phase 6 |
 | 8 | [Parent Dashboard](./phase-08-parent-dashboard.md) | Pending | 8h | Phase 5 |

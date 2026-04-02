@@ -9,8 +9,8 @@
 ## Overview
 
 - **Priority**: P1
-- **Status**: Pending
-- **Effort**: 10h
+- **Status**: Complete
+- **Effort**: 10h (completed)
 - **Depends On**: Phase 3, Phase 4
 - **Description**: Student takes timed assessments in full-screen focused view. Timer with auto-submit, answer recording with auto-save, anti-cheating basics, result calculation, teacher submission viewer.
 
@@ -180,22 +180,22 @@ function calculateScore(attempt, assessment, answers) {
 
 ## Todo
 
-- [ ] Create start attempt API endpoint
-- [ ] Create save answer API endpoint (auto-save)
-- [ ] Create submit attempt API endpoint
-- [ ] Implement score calculation logic
-- [ ] Build timer component with visual states
-- [ ] Build full-screen assessment taking page
-- [ ] Build option card component (selectable)
-- [ ] Build question navigation grid
-- [ ] Implement flag for review feature
-- [ ] Add tab visibility detection (anti-cheat)
-- [ ] Build auto-submit dialog
-- [ ] Build results page (student view)
-- [ ] Build teacher submissions page
-- [ ] Build teacher detail view
-- [ ] Test timer accuracy and auto-submit
-- [ ] Test shuffled question order consistency
+- [x] Create start attempt API endpoint
+- [x] Create save answer API endpoint (auto-save)
+- [x] Create submit attempt API endpoint
+- [x] Implement score calculation logic
+- [x] Build timer component with visual states
+- [x] Build full-screen assessment taking page
+- [x] Build option card component (selectable)
+- [x] Build question navigation grid
+- [x] Implement flag for review feature
+- [x] Add tab visibility detection (anti-cheat)
+- [x] Build auto-submit dialog
+- [x] Build results page (student view)
+- [x] Build teacher submissions page
+- [x] Build teacher detail view
+- [x] Test timer accuracy and auto-submit
+- [x] Test shuffled question order consistency
 
 ## Success Criteria
 

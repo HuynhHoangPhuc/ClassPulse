@@ -170,10 +170,13 @@ export const assessmentAttempts = sqliteTable(
     score: real("score"),
     totalPossible: real("total_possible"),
     status: text("status").notNull().default("in_progress"),
+    tabSwitchCount: integer("tab_switch_count").notNull().default(0),
+    questionOrder: text("question_order"), // JSON string of ordered question IDs (for shuffle)
   },
   (t) => ({
     studentIdx: index("attempts_student_id_idx").on(t.studentId),
     assessmentIdx: index("attempts_assessment_id_idx").on(t.assessmentId),
+    classroomAssessmentIdx: index("attempts_classroom_assessment_idx").on(t.classroomId, t.assessmentId),
   }),
 );
 
