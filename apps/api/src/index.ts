@@ -13,6 +13,8 @@ import { classroomMemberRoutes } from "./routes/classroom-member-routes.js";
 import { classroomPostRoutes } from "./routes/classroom-post-routes.js";
 import { attemptRoutes } from "./routes/attempt-routes.js";
 import { commentRoutes } from "./routes/comment-routes.js";
+import { websocketRoutes } from "./routes/websocket-routes.js";
+import { notificationRoutes } from "./routes/notification-routes.js";
 
 type Variables = { userId: string };
 
@@ -26,6 +28,9 @@ app.use("*", corsMiddleware());
 
 // ── Public routes (no auth required) ──────────────────────────────────────────
 app.route("/webhook/clerk", clerkWebhookRoute);
+
+// ── WebSocket route (auth via query param, must be before /api/* guard) ───────
+app.route("/", websocketRoutes);
 
 // ── Auth guard for all /api/* routes ──────────────────────────────────────────
 app.use("/api/*", authMiddleware);
@@ -41,7 +46,8 @@ const routes = app
   .route("/api/classrooms", classroomMemberRoutes)
   .route("/api/classrooms", classroomPostRoutes)
   .route("/api/attempts", attemptRoutes)
-  .route("/api", commentRoutes);
+  .route("/api", commentRoutes)
+  .route("/api", notificationRoutes);
 
 // ── Health check ───────────────────────────────────────────────────────────────
 app.get("/health", (c) => c.json({ status: "ok" }));
@@ -49,3 +55,6 @@ app.get("/health", (c) => c.json({ status: "ok" }));
 // Export app type for Hono RPC client type inference in the web app
 export type AppType = typeof routes;
 export default app;
+
+// Export Durable Object classes for Cloudflare Workers runtime
+export { NotificationHub } from "./durable-objects/notification-hub.js";

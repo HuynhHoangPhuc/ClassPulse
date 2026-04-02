@@ -1,6 +1,6 @@
 # Code Standards — Teaching Platform
 
-**Phase:** Phase 5 Complete (Student Assessment Taking)
+**Phase:** Phase 7 Complete (Real-time Notifications)
 
 Coding conventions and architectural patterns for maintaining consistency across the monorepo.
 
@@ -86,7 +86,7 @@ app.use("/api/*", async (c, next) => {
 - Service files in `src/services/` — encapsulate business logic
 - Naming: `{domain}-service.ts` for CRUD, `{domain}-query-service.ts` for complex reads, `{domain}-generator-service.ts` for generation logic
 - Keep route handlers thin: delegate to services for complex operations
-- Example services: `question-service.ts`, `assessment-service.ts`, `assessment-query-service.ts`, `assessment-generator-service.ts`, `classroom-service.ts`, `classroom-member-service.ts`
+- Example services: `question-service.ts`, `assessment-service.ts`, `assessment-query-service.ts`, `assessment-generator-service.ts`, `classroom-service.ts`, `classroom-member-service.ts`, `realtime-service.ts` (Phase 7)
 
 ```typescript
 // src/services/assessment-service.ts (CRUD)
@@ -511,6 +511,8 @@ export async function createAssessmentFromTemplate(
 apps/api/src/
 ├── db/
 │   └── schema.ts                        # All Drizzle tables + types (17 tables)
+├── durable-objects/
+│   └── notification-hub.ts              # WebSocket connection manager (Phase 7)
 ├── middleware/
 │   ├── auth-middleware.ts               # JWT verification
 │   ├── error-middleware.ts              # Error handling
@@ -524,7 +526,9 @@ apps/api/src/
 │   ├── classroom-member-routes.ts       # GET/POST/DELETE /api/classrooms/:id/members
 │   ├── classroom-post-routes.ts         # GET/POST/PUT/DELETE /api/classrooms/:id/posts
 │   ├── comment-routes.ts                # GET/POST/PUT/DELETE /posts/:postId/comments + member search
-│   ├── attempt-routes.ts                # POST start/save/submit + GET results/detail (Phase 5)
+│   ├── attempt-routes.ts                # POST start/save/submit + GET results/detail
+│   ├── notification-routes.ts           # GET/PUT /api/notifications (Phase 7)
+│   ├── websocket-routes.ts              # GET /ws/classroom/:id WebSocket upgrade (Phase 7)
 │   ├── upload-route.ts                  # Image upload & retrieval
 │   └── ...
 ├── services/
@@ -536,9 +540,10 @@ apps/api/src/
 │   ├── classroom-member-service.ts      # Member management + role checks
 │   ├── comment-service.ts               # Comments CRUD + mention extraction + notifications
 │   ├── notification-service.ts          # Notification creation for mentions + submissions
-│   ├── attempt-service.ts               # Assessment attempt CRUD + submission logic (Phase 5)
-│   ├── attempt-query-service.ts         # Complex attempt reads + student results (Phase 5)
-│   ├── score-calculator-service.ts      # Score calculation logic (Phase 5)
+│   ├── realtime-service.ts              # Real-time event broadcasting to NotificationHub (Phase 7)
+│   ├── attempt-service.ts               # Assessment attempt CRUD + submission logic
+│   ├── attempt-query-service.ts         # Complex attempt reads + student results
+│   ├── score-calculator-service.ts      # Score calculation logic
 │   └── ...
 ├── lib/
 │   └── id-generator.ts                  # Custom ID generation
@@ -564,7 +569,7 @@ apps/web/src/
 │   │   ├── question-list-page.tsx
 │   │   ├── question-editor-page.tsx
 │   │   └── ...
-│   ├── assessments/                 # Assessment feature module (Phase 3)
+│   ├── assessments/                 # Assessment feature module
 │   │   ├── assessment-list-page.tsx
 │   │   ├── assessment-wizard-page.tsx      # 3-step creation wizard
 │   │   ├── assessment-preview-page.tsx
@@ -572,7 +577,7 @@ apps/web/src/
 │   │   ├── auto-gen-config.tsx
 │   │   ├── wizard-step-*.tsx
 │   │   └── ...
-│   ├── classrooms/                  # Classroom feature module (Phase 4)
+│   ├── classrooms/                  # Classroom feature module
 │   │   ├── classroom-list-page.tsx
 │   │   ├── classroom-detail-page.tsx       # 4-tab layout (Feed/Members/Assessments/Settings)
 │   │   ├── classroom-feed-tab.tsx
@@ -588,25 +593,35 @@ apps/web/src/
 │   │   ├── mention-renderer.tsx            # Renders @[Name](user_id) as linked mentions
 │   │   ├── add-member-dialog.tsx
 │   │   └── ...
-│   └── assessment-taking/              # Assessment taking feature (Phase 5)
-│       ├── taking-page.tsx                 # Full-screen taking interface
-│       ├── question-view.tsx               # Question display + answer input
-│       ├── countdown-timer.tsx             # Client-side countdown with grace period
-│       ├── question-grid.tsx               # Navigation grid showing question status
-│       ├── results-page.tsx                # Score + explanations after submit
-│       ├── teacher-submission-viewer.tsx   # View student submissions + tab-switch counts
+│   ├── assessment-taking/              # Assessment taking feature
+│   │   ├── taking-page.tsx                 # Full-screen taking interface
+│   │   ├── question-view.tsx               # Question display + answer input
+│   │   ├── countdown-timer.tsx             # Client-side countdown with grace period
+│   │   ├── question-grid.tsx               # Navigation grid showing question status
+│   │   ├── results-page.tsx                # Score + explanations after submit
+│   │   ├── teacher-submission-viewer.tsx   # View student submissions + tab-switch counts
+│   │   └── ...
+│   └── notifications/                   # Real-time notifications (Phase 7)
+│       ├── notification-provider.tsx     # Context + WebSocket management
+│       ├── notification-bell.tsx         # Header bell with unread badge
+│       ├── notification-panel.tsx        # Dropdown notification list
+│       ├── notification-item.tsx         # Individual notification card
+│       ├── notification-toast.tsx        # Toast for new events
 │       └── ...
 ├── components/
 │   ├── layout/
 │   │   ├── app-shell.tsx
 │   │   ├── sidebar.tsx
-│   │   ├── header.tsx
+│   │   ├── header.tsx                  # Updated with notification bell (Phase 7)
 │   │   └── dark-mode-toggle.tsx
 │   └── ui/
 │       ├── card.tsx
 │       ├── badge.tsx
 │       ├── page-header.tsx
 │       └── empty-state.tsx
+├── hooks/
+│   ├── use-websocket.ts               # WebSocket with auto-reconnect (Phase 7)
+│   └── ...
 ├── lib/
 │   ├── api-client.ts                # Hono RPC client
 │   └── utils.ts                     # Helper functions

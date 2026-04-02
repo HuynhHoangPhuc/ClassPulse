@@ -9,7 +9,7 @@
 ## Overview
 
 - **Priority**: P2
-- **Status**: Pending
+- **Status**: Complete
 - **Effort**: 8h
 - **Depends On**: Phase 6
 - **Description**: Durable Objects WebSocket setup for real-time notification delivery, notification inbox with read/unread, notification panel UI. Upgrades Phase 6's DB-only notifications to live push.
@@ -190,20 +190,20 @@ On leave classroom:
 
 ## Todo
 
-- [ ] Create NotificationHub Durable Object class
-- [ ] Create WebSocket upgrade endpoint in Hono
-- [ ] Implement broadcast method in DO
-- [ ] Create realtime-service.ts for triggering DO events
-- [ ] Integrate real-time triggers into comment and post services
-- [ ] Create notification CRUD API (list, mark read, unread count)
-- [ ] Build NotificationProvider (React context + WebSocket manager)
-- [ ] Build useWebSocket hook with reconnect logic
-- [ ] Build notification bell with unread badge
-- [ ] Build notification panel (slide-out, grouped)
-- [ ] Build notification toast component
-- [ ] Test WebSocket connection/reconnection
-- [ ] Test end-to-end: comment → DO broadcast → client notification
-- [ ] Add polling fallback (30s) if WebSocket unavailable
+- [x] Create NotificationHub Durable Object class
+- [x] Create WebSocket upgrade endpoint in Hono
+- [x] Implement broadcast method in DO
+- [x] Create realtime-service.ts for triggering DO events
+- [x] Integrate real-time triggers into comment and post services
+- [x] Create notification CRUD API (list, mark read, unread count)
+- [x] Build NotificationProvider (React context + WebSocket manager)
+- [x] Build useWebSocket hook with reconnect logic
+- [x] Build notification bell with unread badge
+- [x] Build notification panel (slide-out, grouped)
+- [x] Build notification toast component
+- [x] Test WebSocket connection/reconnection
+- [x] Test end-to-end: comment → DO broadcast → client notification
+- [x] Add polling fallback (30s) if WebSocket unavailable
 
 ## Success Criteria
 

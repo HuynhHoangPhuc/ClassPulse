@@ -1,6 +1,6 @@
 # System Architecture — Teaching Platform
 
-**Current Phase:** Phase 5 Complete (Student Assessment Taking)
+**Current Phase:** Phase 7 Complete (Real-time Notifications)
 
 ---
 
@@ -78,7 +78,7 @@ teaching-platform/
 
 ---
 
-## 3. Database Schema (17 Tables, Phase 5)
+## 3. Database Schema (17 Tables, Phase 7)
 
 ### Core Users
 - **users** — User account data, roles (teacher/student/parent)
@@ -110,7 +110,7 @@ teaching-platform/
 
 ## 4. API Architecture
 
-### Server: Hono on Cloudflare Workers
+### Server: Hono on Cloudflare Workers + Durable Objects (Phase 7)
 
 ```
 Hono App (src/index.ts)
@@ -118,6 +118,8 @@ Hono App (src/index.ts)
 ├── CORS Middleware (all routes)
 ├── Public Routes
 │   └── POST /webhook/clerk — Clerk webhook for user sync
+├── WebSocket Routes (Phase 7)
+│   └── GET /ws/classroom/:classroomId?token=<jwt> — Upgrade to NotificationHub DO
 ├── Protected Routes (/api/*)
 │   ├── Auth Middleware (JWT verification)
 │   ├── /api/users
@@ -169,17 +171,30 @@ Hono App (src/index.ts)
 │   │       └── DELETE /:commentId — Delete comment (author only, cascade to mentions)
 │   ├── /api/classrooms/:id/members/search
 │   │   └── GET / — Search classroom members by name (for @mention autocomplete)
-│   ├── /api/attempts (Phase 5)
+│   ├── /api/attempts
 │   │   ├── POST /start — Start assessment attempt
 │   │   ├── POST /:attemptId/save — Save current progress
 │   │   ├── POST /:attemptId/submit — Submit assessment (atomic, no resubmit)
 │   │   ├── GET /:attemptId/results — Get scores + explanations
 │   │   └── GET /:attemptId/detail — Get detailed attempt with all answers
+│   ├── /api/notifications (Phase 7)
+│   │   ├── GET / — List user's notifications
+│   │   ├── GET /unread-count — Get unread notification count
+│   │   ├── PUT /:id — Mark single notification as read
+│   │   └── PUT /read-all — Mark all as read
 │   └── /api/upload
 │       ├── POST /image — Upload image asset
 │       └── GET /image/:id — Retrieve image
 └── Health Check (/health)
 ```
+
+### Durable Objects (Phase 7)
+- **NotificationHub** — Per-classroom WebSocket connection manager
+  - Accepts WebSocket connections from clients
+  - Stores active client sessions mapped by userId
+  - Broadcasts events to specific users or all classroom members
+  - Persists across Worker request/response cycles via hibernation
+  - Internal broadcast endpoint: `POST /broadcast` (called by Worker API)
 
 ### Type Safety
 - Hono exports `AppType` for RPC client type inference in the web app
@@ -209,8 +224,16 @@ Hono App (src/index.ts)
 ### Layout Components
 - `layout/app-shell.tsx` — Main wrapper with sidebar + header
 - `layout/sidebar.tsx` — Navigation menu (collapsible)
-- `layout/header.tsx` — Top bar with user menu + notifications
+- `layout/header.tsx` — Top bar with user menu + notification bell (Phase 7)
 - `layout/dark-mode-toggle.tsx` — Theme switcher
+
+### Notifications (Phase 7)
+- `features/notifications/notification-provider.tsx` — Provides notification context + WebSocket connection
+- `features/notifications/notification-bell.tsx` — Header bell icon with unread badge
+- `features/notifications/notification-panel.tsx` — Dropdown panel showing notifications
+- `features/notifications/notification-item.tsx` — Individual notification card
+- `features/notifications/notification-toast.tsx` — Toast for new real-time events
+- `hooks/use-websocket.ts` — WebSocket connection hook with auto-reconnect + ping/pong
 
 ### UI Components (Reusable)
 - `ui/card.tsx` — Card container (bento grid building block)
@@ -267,10 +290,14 @@ Hono App (src/index.ts)
 5. **Results** → Scored immediately (if show_results = "immediately"), stored in assessmentAttempts/attemptAnswers
 6. **Parent visibility** → Parent dashboard queries child's assessmentAttempts, filtered by parentDetailView config
 
-### Notifications
-- Events: Comment mentions, assessment submissions, assignment due
-- Stored in notifications table, marked read on view
-- Synced to client via polling (phase 2+: websocket)
+### Notifications (Phase 7: Real-time via WebSocket)
+1. **Event generation** — When comment is posted with @mention or assessment submitted, event created
+2. **NotificationHub broadcast** — Worker calls NotificationHub.broadcast() with event + recipients
+3. **WebSocket delivery** — All connected clients in classroom receive event in real-time via DO
+4. **Notification storage** — Events persisted to notifications table for history/read status
+5. **Client handling** — React component receives event → updates query cache → displays toast + increments badge
+6. **Read tracking** — User clicks notification → PUT /api/notifications/:id marks as read
+7. **Fallback** — GET /api/notifications endpoint for missing history on reconnect
 
 ---
 

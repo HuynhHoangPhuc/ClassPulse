@@ -1,8 +1,8 @@
 # Codebase Summary — Teaching Platform
 
 **Last Updated:** 2026-04-02  
-**Phase:** Phase 5 Complete (Student Assessment Taking)  
-**Total Files:** 166 | **Total Tokens:** ~210K
+**Phase:** Phase 7 Complete (Real-time Notifications)  
+**Total Files:** 180 | **Total Tokens:** ~240K
 
 ---
 
@@ -17,27 +17,30 @@ Teaching Platform is a monorepo-based SaaS for educators to create, manage, and 
 ```
 teaching-platform/
 ├── apps/
-│   ├── api/                          # Backend (Hono + Drizzle ORM)
+│   ├── api/                          # Backend (Hono + Drizzle ORM + Durable Objects)
 │   │   ├── src/
 │   │   │   ├── db/schema.ts          # 17 tables, Drizzle schema
+│   │   │   ├── durable-objects/      # NotificationHub WebSocket DO (Phase 7)
 │   │   │   ├── middleware/           # Auth, CORS, error handling
-│   │   │   ├── routes/               # 9 route files (users, questions, assessments, classrooms, attempts, comments, etc.)
-│   │   │   ├── services/             # Business logic (11 service files)
+│   │   │   ├── routes/               # 11 route files (users, questions, assessments, classrooms, attempts, comments, notifications, websocket, etc.)
+│   │   │   ├── services/             # Business logic (12 service files)
 │   │   │   ├── lib/id-generator.ts   # Custom ID generation
 │   │   │   ├── env.ts                # Environment types
 │   │   │   └── index.ts              # Hono app entry
-│   │   ├── wrangler.toml             # Cloudflare Workers config
+│   │   ├── wrangler.toml             # Cloudflare Workers + DO config
 │   │   ├── drizzle.config.ts         # Drizzle migrations
 │   │   └── tsconfig.json
 │   │
 │   └── web/                          # Frontend (React 19 + Vite)
 │       ├── src/
 │       │   ├── routes/               # TanStack Router (7 route files)
-│       │   ├── features/             # Feature modules (questions, assessments, classrooms)
+│       │   ├── features/             # Feature modules (questions, assessments, classrooms, notifications)
 │       │   │   ├── questions/        # Question bank (7 components)
 │       │   │   ├── assessments/      # Assessment management & taking (12 components)
-│       │   │   └── classrooms/       # Classroom management & discussion (14 components)
+│       │   │   ├── classrooms/       # Classroom management & discussion (14 components)
+│       │   │   └── notifications/    # Real-time notifications (5 components) (Phase 7)
 │       │   ├── components/           # Reusable UI (layout, ui)
+│       │   ├── hooks/                # Custom hooks (use-websocket) (Phase 7)
 │       │   ├── lib/                  # API client, utilities
 │       │   ├── app.tsx               # Root component
 │       │   ├── app.css               # Global styles
@@ -75,7 +78,7 @@ teaching-platform/
 
 ## 3. Core Modules & Responsibilities
 
-### Backend Routes (9 files)
+### Backend Routes (11 files)
 
 | Route File | Purpose | Methods | Key Endpoints |
 |-----------|---------|---------|---------------|
@@ -87,10 +90,12 @@ teaching-platform/
 | **classroom-member-routes.ts** | Member management | GET, POST, DELETE, PUT | `/api/classrooms/:id/members` |
 | **classroom-post-routes.ts** | Feed & posts | GET, POST, PUT, DELETE | `/api/classrooms/:id/posts` |
 | **comment-routes.ts** | Comments & mentions | GET, POST, PUT, DELETE | `/posts/:postId/comments`, `/classrooms/:id/members/search` |
-| **attempt-routes.ts** | Assessment taking (Phase 5) | POST, GET | `/api/attempts/start`, `/save`, `/submit`, `/results`, `/detail` |
+| **attempt-routes.ts** | Assessment taking | POST, GET | `/api/attempts/start`, `/save`, `/submit`, `/results`, `/detail` |
+| **notification-routes.ts** | User notifications (Phase 7) | GET, PUT | `/api/notifications`, `/api/notifications/unread-count`, `/api/notifications/:id`, `/api/notifications/read-all` |
+| **websocket-routes.ts** | WebSocket upgrade (Phase 7) | GET | `/ws/classroom/:classroomId?token=<jwt>` |
 | **upload-route.ts** | Image asset storage | POST, GET | `/api/upload/image` |
 
-### Backend Services (11 files)
+### Backend Services (12 files)
 
 | Service | Purpose | Key Functions |
 |---------|---------|----------------|
@@ -102,6 +107,7 @@ teaching-platform/
 | **classroom-member-service.ts** | Member management | Add, remove, role updates, permissions checks |
 | **comment-service.ts** | Comments & mentions | List, create, update, delete, mention extraction |
 | **notification-service.ts** | Notification creation | Create mentions, submissions, assignment notifications |
+| **realtime-service.ts** | Real-time event broadcasting (Phase 7) | Broadcast to NotificationHub DO, event routing |
 | **attempt-service.ts** | Assessment attempt CRUD | Start, save, submit, validate answers |
 | **attempt-query-service.ts** | Attempt queries | Get results, detail, student answers |
 | **score-calculator-service.ts** | Scoring logic | Calculate scores with penalties, custom per-question scoring |
@@ -146,6 +152,13 @@ teaching-platform/
 - mention-autocomplete.tsx — Member search dropdown
 - mention-renderer.tsx — @mention rendering
 - add-member-dialog.tsx — Add students/parents
+
+#### Notifications Feature (5 components, Phase 7)
+- notification-provider.tsx — Context provider + WebSocket connection management
+- notification-bell.tsx — Header bell icon with unread badge
+- notification-panel.tsx — Dropdown panel showing notification list
+- notification-item.tsx — Individual notification card
+- notification-toast.tsx — Toast alert for new real-time events
 
 ### Shared Package (Types & Constants)
 
@@ -209,6 +222,9 @@ teaching-platform/
 - `POST /webhook/clerk` — Clerk webhook for user sync
 - `GET /health` — Health check
 
+### WebSocket (Phase 7)
+- `GET /ws/classroom/:classroomId?token=<jwt>` — Upgrade to NotificationHub DO
+
 ### Protected (/api/*)
 - **Users:** GET/PATCH `/api/users`
 - **Questions:** GET/POST/PUT/DELETE `/api/questions`, POST `/api/questions/bulk`
@@ -219,7 +235,8 @@ teaching-platform/
 - **Posts:** GET/POST/PUT/DELETE `/api/classrooms/:id/posts`
 - **Comments:** GET/POST/PUT/DELETE `/posts/:postId/comments`
 - **Member Search:** GET `/classrooms/:id/members/search` (for @mention autocomplete)
-- **Attempts (Phase 5):** POST `/start`, `/save`, `/submit`, GET `/results`, `/detail`
+- **Attempts:** POST `/start`, `/save`, `/submit`, GET `/results`, `/detail`
+- **Notifications (Phase 7):** GET `/api/notifications`, GET `/api/notifications/unread-count`, PUT `/api/notifications/:id`, PUT `/api/notifications/read-all`
 - **Upload:** POST/GET `/api/upload/image`
 
 ---
@@ -267,6 +284,17 @@ teaching-platform/
 - Immediate result display
 - Teacher submission viewer
 - Atomic submit guard (prevent resubmit)
+
+### Phase 7: Real-time Notifications (Complete)
+- WebSocket connections via Durable Objects (one DO per classroom)
+- Real-time event broadcasting to connected clients
+- Notification API (GET, PUT for read tracking)
+- NotificationHub DO for connection management
+- Notification bell with unread count badge
+- Notification panel + dropdown UI
+- Toast notifications for real-time events
+- Auto-reconnect with exponential backoff
+- Ping/pong keepalive for stable connections
 
 ---
 

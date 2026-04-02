@@ -1,6 +1,7 @@
-import { Menu, Bell } from "lucide-react";
+import { Menu } from "lucide-react";
 import { UserButton } from "@clerk/clerk-react";
 import { DarkModeToggle } from "./dark-mode-toggle";
+import { NotificationBell } from "@/features/notifications/notification-bell";
 import { cn } from "@/lib/utils";
 
 interface HeaderProps {
@@ -51,16 +52,7 @@ export function Header({ title, onMenuClick, className }: HeaderProps) {
       {/* Right: dark mode toggle + notifications + user */}
       <div className="flex items-center gap-1">
         <DarkModeToggle />
-        <button
-          aria-label="Notifications"
-          className={cn(
-            "relative flex items-center justify-center w-9 h-9 rounded-xl",
-            "hover:bg-[var(--color-muted)] text-[var(--color-muted-foreground)]",
-            "transition-colors"
-          )}
-        >
-          <Bell size={18} />
-        </button>
+        <NotificationBell />
         <div className="ml-2">
           <UserButton afterSignOutUrl="/login" />
         </div>

@@ -37,7 +37,7 @@ Build multi-role (teacher/student/parent) teaching platform. Hono API on CF Work
 | 4 | [Classroom](./phase-04-classroom.md) | Complete | 10h | Phase 1 |
 | 5 | [Assessment Taking](./phase-05-assessment-taking.md) | Complete | 10h | Phase 3, 4 |
 | 6 | [Comments & Mentions](./phase-06-comments-mentions.md) | Complete | 8h | Phase 4 |
-| 7 | [Real-time Notifications](./phase-07-realtime-notifications.md) | Pending | 8h | Phase 6 |
+| 7 | [Real-time Notifications](./phase-07-realtime-notifications.md) | Complete | 8h | Phase 6 |
 | 8 | [Parent Dashboard](./phase-08-parent-dashboard.md) | Pending | 8h | Phase 5 |
 
 ## Dependency Graph

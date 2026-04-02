@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "@tanstack/react-router";
 import { useAuth } from "@clerk/clerk-react";
 import { useQuery } from "@tanstack/react-query";
@@ -10,6 +10,7 @@ import { ClassroomFeedTab } from "./classroom-feed-tab";
 import { ClassroomMembersTab } from "./classroom-members-tab";
 import { ClassroomAssessmentsTab } from "./classroom-assessments-tab";
 import { ClassroomSettingsTab } from "./classroom-settings-tab";
+import { useNotifications } from "@/features/notifications/notification-provider";
 
 type Tab = "feed" | "members" | "assessments" | "settings";
 
@@ -32,6 +33,13 @@ export function ClassroomDetailPage({ classroomId }: ClassroomDetailPageProps) {
   const { getToken } = useAuth();
   const [tab, setTab] = useState<Tab>("feed");
   const [copied, setCopied] = useState(false);
+  const { setActiveClassroom } = useNotifications();
+
+  // Connect WebSocket to this classroom's NotificationHub DO
+  useEffect(() => {
+    setActiveClassroom(classroomId);
+    return () => setActiveClassroom(null);
+  }, [classroomId, setActiveClassroom]);
 
   const { data: classroom, isLoading } = useQuery<ClassroomDetail>({
     queryKey: ["classrooms", classroomId],

@@ -2,6 +2,8 @@ import { createRoute, Outlet } from "@tanstack/react-router";
 import { useAuth } from "@clerk/clerk-react";
 import { rootRoute } from "./root-route";
 import { AppShell } from "@/components/layout/app-shell";
+import { NotificationProvider } from "@/features/notifications/notification-provider";
+import { NotificationToast } from "@/features/notifications/notification-toast";
 
 /**
  * Auth guard layout route.
@@ -43,8 +45,11 @@ function AuthedLayoutComponent() {
   }
 
   return (
-    <AppShell>
-      <Outlet />
-    </AppShell>
+    <NotificationProvider>
+      <AppShell>
+        <Outlet />
+      </AppShell>
+      <NotificationToast />
+    </NotificationProvider>
   );
 }

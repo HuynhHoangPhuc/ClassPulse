@@ -12,6 +12,15 @@ database_id = "local"
 binding = "STORAGE"
 bucket_name = "teaching-storage"
 
+[durable_objects]
+bindings = [
+  { name = "NOTIFICATION_HUB", class_name = "NotificationHub" }
+]
+
+[[migrations]]
+tag = "v1"
+new_classes = ["NotificationHub"]
+
 [vars]
 CLERK_PUBLISHABLE_KEY = ""
 CORS_ORIGIN = "http://localhost:5173"

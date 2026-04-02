@@ -1,8 +1,8 @@
 # Project Overview & PDR — Teaching Platform
 
-**Version:** 1.4 (Phase 5 Complete)  
+**Version:** 1.5 (Phase 7 Complete)  
 **Last Updated:** 2026-04-02  
-**Status:** Student Assessment Taking Complete
+**Status:** Real-time Notifications Complete
 
 ---
 
@@ -67,6 +67,18 @@ Teaching Platform is a SaaS application for educators to create, manage, and gra
 - Assessment attempt start/save/submit endpoints (atomic, no resubmit)
 - Results and detail endpoints for students/teachers
 - Migration: tab_switch_count, question_order columns + composite index
+
+**Phase 7 Deliverables (Complete - Real-time Notifications):**
+- Durable Objects NotificationHub for per-classroom WebSocket management
+- WebSocket upgrade endpoint at GET /ws/classroom/:id with JWT auth
+- Notification API endpoints (GET, PUT for read tracking, unread count)
+- Real-time event broadcasting to classroom members
+- Notification bell component in header with unread badge
+- Notification panel UI with dropdown list
+- Toast notifications for new real-time events
+- Custom use-websocket hook with auto-reconnect (exponential backoff)
+- Ping/pong keepalive for stable connections
+- Notification database table for history + read status
 
 ---
 
@@ -190,16 +202,26 @@ Empower educators with intuitive assessment tools that reduce administrative bur
 - [x] Teacher submission viewer with tab-switch counts
 - [x] Assessment results & detail endpoints
 
-### Phase 6+: Advanced Features
+### Phase 6: Analytics & Parent Dashboards (Planned)
 - [ ] Parent dashboards (metrics, trend graphs, student selector)
 - [ ] Teacher analytics (performance by topic, comparison to class average)
-- [ ] Notifications system (comments, submissions, assignments)
-- [ ] WebSocket real-time feed updates
-- [ ] AI question generation (OpenAI integration)
 - [ ] Manual grading interface (for essay/short-answer questions)
+- [ ] Student progress reports (downloadable PDF)
+
+### Phase 7: Real-time Notifications (COMPLETE)
+- [x] WebSocket real-time feed updates (Durable Objects)
+- [x] Notification API endpoints (GET/PUT)
+- [x] NotificationHub DO for per-classroom connection management
+- [x] Notification bell in header with unread count
+- [x] Notification panel UI with dropdown
+- [x] Toast notifications for real-time events
+- [x] Auto-reconnect with exponential backoff
+
+### Phase 8+: Advanced Features
+- [ ] AI question generation (OpenAI integration)
 - [ ] Assessment editing with version history
 - [ ] Bulk operations (import questions from CSV, bulk assign)
-- [ ] Student progress reports (downloadable PDF)
+- [ ] Mobile app (React Native)
 
 ---
 
@@ -369,20 +391,30 @@ Empower educators with intuitive assessment tools that reduce administrative bur
 - Assessment start/save/submit/results/detail endpoints
 - Atomic submit guard (no resubmit)
 
-### Phase 6: Analytics & Parent Dashboards (Oct-Nov 2026)
+### Phase 6: Analytics & Parent Dashboards (Planned)
 **Timeline:** 6 weeks  
 **Deliverables:**
 - Parent dashboards (metrics, trend graphs, student selector)
 - Teacher analytics (performance by topic, comparison to class average)
 - Manual grading interface (for essay/short-answer questions)
 - Student progress reports (downloadable PDF)
-- Notification system (comments, submissions, assignments)
 
-### Phase 7: Advanced Features & Launch (Dec 2026)
+### Phase 7: Real-time Notifications (COMPLETE)
+**Timeline:** Apr 2026  
+**Status:** Done  
+**Deliverables:**
+- Durable Objects NotificationHub for WebSocket management
+- WebSocket upgrade endpoint with JWT auth
+- Notification API (GET, PUT, unread count)
+- Real-time event broadcasting to classrooms
+- Notification UI (bell, panel, toast)
+- Auto-reconnect with exponential backoff
+- Ping/pong keepalive
+
+### Phase 8: Advanced Features & Launch (Planned)
 **Timeline:** 8 weeks  
 **Deliverables:**
 - AI question generation (OpenAI integration)
-- WebSocket real-time updates
 - Assessment editing with version history
 - Bulk operations (import questions from CSV, bulk assign)
 - Security audit

@@ -12,6 +12,7 @@ import {
   deleteComment,
   searchClassroomMembers,
 } from "../services/comment-service.js";
+import { notifyClassroom } from "../services/realtime-service.js";
 
 type Variables = { userId: string };
 const commentRoutes = new Hono<Env & { Variables: Variables }>();
@@ -71,6 +72,13 @@ commentRoutes.post("/posts/:postId/comments", async (c) => {
     parsed.data.parentCommentId ?? null,
     parsed.data.mentionUserIds ?? [],
   );
+
+  // Broadcast real-time notification to classroom (use underscore types matching DB)
+  await notifyClassroom(c.env, post.classroomId, {
+    type: parsed.data.parentCommentId ? "comment_reply" : "mention",
+    data: { commentId, postId, authorId: userId },
+    senderId: userId,
+  });
 
   return c.json({ id: commentId }, 201);
 });

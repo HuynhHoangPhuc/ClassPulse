@@ -1,7 +1,7 @@
 import { Hono } from "hono";
 import { drizzle } from "drizzle-orm/d1";
 import { eq, and, sql } from "drizzle-orm";
-import { posts, users, assessments, comments, commentMentions } from "../db/schema.js";
+import { posts, users, assessments, comments, commentMentions, classroomMembers } from "../db/schema.js";
 import type { Env } from "../env.js";
 import { createPostSchema, updatePostSchema, classroomFeedFilterSchema } from "@teaching/shared";
 import { isClassroomTeacher, isClassroomMember } from "../services/classroom-service.js";
@@ -9,6 +9,8 @@ import { generateId } from "../lib/id-generator.js";
 import { attemptFilterSchema } from "@teaching/shared";
 import { listSubmissions } from "../services/attempt-query-service.js";
 import { getCommentCounts } from "../services/comment-service.js";
+import { notifyClassroom } from "../services/realtime-service.js";
+import { createNotifications } from "../services/notification-service.js";
 
 type Variables = { userId: string };
 const classroomPostRoutes = new Hono<Env & { Variables: Variables }>();
@@ -120,6 +122,38 @@ classroomPostRoutes.post("/:id/posts", async (c) => {
   });
 
   const [post] = await db.select().from(posts).where(eq(posts.id, id)).limit(1);
+
+  // Create DB notification records for all classroom members (except poster)
+  const members = await db
+    .select({ userId: classroomMembers.userId })
+    .from(classroomMembers)
+    .where(eq(classroomMembers.classroomId, classroomId));
+
+  const notifType = parsed.data.type === "assessment_assignment" ? "assessment_assigned" : "announcement";
+  const notifMessage = parsed.data.type === "assessment_assignment"
+    ? `New assessment assigned: ${parsed.data.title}`
+    : `New announcement: ${parsed.data.title}`;
+
+  await createNotifications(
+    db,
+    members
+      .filter((m) => m.userId !== userId)
+      .map((m) => ({
+        userId: m.userId,
+        type: notifType,
+        referenceType: "post",
+        referenceId: id,
+        message: notifMessage,
+      })),
+  );
+
+  // Broadcast real-time push via DO
+  await notifyClassroom(c.env, classroomId, {
+    type: notifType,
+    data: { postId: id, title: parsed.data.title },
+    senderId: userId,
+  });
+
   return c.json(post, 201);
 });
 
