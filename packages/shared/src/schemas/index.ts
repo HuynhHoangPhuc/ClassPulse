@@ -149,6 +149,17 @@ export const updateCommentSchema = z.object({
   mentionUserIds: z.array(z.string()).optional(),
 });
 
+/* ── AI question creation (markdown-based) ── */
+
+export const aiQuestionItemSchema = z.object({
+  content: z.string().min(1).max(10_000),
+  image: z.string().max(7_000_000).optional(),
+});
+
+export const aiCreateQuestionsSchema = z.object({
+  questions: z.array(aiQuestionItemSchema).min(1).max(50),
+});
+
 /* ── Bulk operations ── */
 
 export const bulkQuestionSchema = z.object({

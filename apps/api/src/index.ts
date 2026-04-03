@@ -6,6 +6,7 @@ import { errorMiddleware } from "./middleware/error-middleware.js";
 import { usersRoute, clerkWebhookRoute } from "./routes/users-route.js";
 import { tagsRoute } from "./routes/tags-route.js";
 import { questionsRoute } from "./routes/questions-route.js";
+import { aiQuestionRoutes } from "./routes/ai-question-routes.js";
 import { uploadRoute } from "./routes/upload-route.js";
 import { assessmentRoutes } from "./routes/assessment-routes.js";
 import { classroomRoutes } from "./routes/classroom-routes.js";
@@ -41,6 +42,7 @@ app.use("/api/*", authMiddleware);
 const routes = app
   .route("/api/users", usersRoute)
   .route("/api/tags", tagsRoute)
+  .route("/api/questions/ai", aiQuestionRoutes)
   .route("/api/questions", questionsRoute)
   .route("/api/upload/image", uploadRoute)
   .route("/api/assessments", assessmentRoutes)

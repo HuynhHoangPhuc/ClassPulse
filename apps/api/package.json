@@ -9,20 +9,25 @@
     "typecheck": "tsc --noEmit",
     "lint": "echo 'no linter configured'",
     "db:generate": "drizzle-kit generate",
-    "db:migrate": "wrangler d1 migrations apply teaching-db --local"
+    "db:migrate": "wrangler d1 migrations apply teaching-db --local",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
-    "hono": "^4.7.0",
-    "drizzle-orm": "^0.38.0",
     "@clerk/backend": "^1.20.0",
-    "zod": "^3.24.0",
+    "@teaching/shared": "workspace:*",
+    "drizzle-orm": "^0.38.0",
+    "hono": "^4.7.0",
+    "js-yaml": "^4.1.1",
     "nanoid": "^5.0.0",
-    "@teaching/shared": "workspace:*"
+    "zod": "^3.24.0"
   },
   "devDependencies": {
-    "wrangler": "^3.100.0",
+    "@cloudflare/workers-types": "^4.20250109.0",
+    "@types/js-yaml": "^4.0.9",
     "drizzle-kit": "^0.30.0",
     "typescript": "^5.7.0",
-    "@cloudflare/workers-types": "^4.20250109.0"
+    "vitest": "^4.1.2",
+    "wrangler": "^3.100.0"
   }
 }
