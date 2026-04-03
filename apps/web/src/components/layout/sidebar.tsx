@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useRouter } from "@tanstack/react-router";
+import { useRouter, useRouterState } from "@tanstack/react-router";
 import {
   LayoutDashboard,
   BookOpen,
@@ -67,7 +67,7 @@ interface SidebarProps {
 export function Sidebar({ role = "teacher", mobileOpen, onMobileClose }: SidebarProps) {
   const [collapsed, setCollapsed] = useState(false);
   const router = useRouter();
-  const currentPath = router.state.location.pathname;
+  const currentPath = useRouterState({ select: (s) => s.location.pathname });
   const navItems = navByRole[role];
 
   const sidebarWidth = collapsed
