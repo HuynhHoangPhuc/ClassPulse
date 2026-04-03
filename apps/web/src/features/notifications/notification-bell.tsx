@@ -9,7 +9,7 @@ export function NotificationBell() {
   const [panelOpen, setPanelOpen] = useState(false);
 
   return (
-    <>
+    <div className="relative">
       <button
         type="button"
         aria-label="Notifications"
@@ -31,6 +31,6 @@ export function NotificationBell() {
         )}
       </button>
       <NotificationPanel open={panelOpen} onClose={() => setPanelOpen(false)} />
-    </>
+    </div>
   );
 }

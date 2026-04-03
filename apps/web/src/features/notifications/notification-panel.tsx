@@ -84,16 +84,16 @@ export function NotificationPanel({ open, onClose }: NotificationPanelProps) {
 
   return (
     <>
-      {/* Backdrop */}
+      {/* Backdrop — transparent, closes panel on click */}
       <div className="fixed inset-0 z-40" onClick={onClose} />
 
-      {/* Panel */}
+      {/* Floating dropdown panel anchored to bell button */}
       <div
-        className="fixed right-0 top-0 z-50 h-full w-80 max-w-[90vw] border-l shadow-xl flex flex-col"
+        className="absolute right-0 top-full mt-2 z-50 w-80 max-w-[90vw] max-h-[min(480px,70vh)] rounded-xl border shadow-2xl flex flex-col overflow-hidden"
         style={{ background: "var(--color-card)", borderColor: "var(--color-border)" }}
       >
         {/* Header */}
-        <div className="flex items-center justify-between px-4 py-3 border-b" style={{ borderColor: "var(--color-border)" }}>
+        <div className="flex items-center justify-between px-4 py-3 border-b shrink-0" style={{ borderColor: "var(--color-border)" }}>
           <h3 className="text-sm font-semibold" style={{ color: "var(--color-foreground)" }}>
             Notifications
           </h3>

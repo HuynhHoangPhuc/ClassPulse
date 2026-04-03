@@ -3,14 +3,17 @@ import type { MiddlewareHandler } from "hono";
 import type { Env } from "../env.js";
 
 /**
- * CORS middleware factory — reads allowed origin from Cloudflare env binding.
- * Must be called as a factory so the env is available at request time.
+ * CORS middleware factory — reads allowed origins from Cloudflare env binding.
+ * CORS_ORIGIN supports comma-separated origins (e.g. "https://app.com,http://localhost:5173").
+ * Falls back to localhost for local dev when unset.
  */
 export const corsMiddleware = (): MiddlewareHandler<Env> =>
   async (c, next) => {
-    const origin = c.env.CORS_ORIGIN ?? "http://localhost:5173";
+    const raw = c.env.CORS_ORIGIN ?? "http://localhost:5173";
+    const allowed = raw.split(",").map((s) => s.trim()).filter(Boolean);
+
     return cors({
-      origin,
+      origin: allowed.length === 1 ? allowed[0] : allowed,
       allowMethods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
       allowHeaders: ["Authorization", "Content-Type"],
       maxAge: 86400,
