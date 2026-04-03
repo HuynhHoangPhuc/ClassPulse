@@ -1,8 +1,8 @@
 # Codebase Summary — Teaching Platform
 
 **Last Updated:** 2026-04-03
-**Phase:** Phase 7 + QA Bugfix Batch
-**Total Files:** 185 | **Total Tokens:** ~250K
+**Phase:** Phase 7 + QA Bugfix Batch + AI Question API
+**Total Files:** 188 | **Total Tokens:** ~265K
 
 ---
 
@@ -22,8 +22,8 @@ teaching-platform/
 │   │   │   ├── db/schema.ts          # 17 tables, Drizzle schema
 │   │   │   ├── durable-objects/      # NotificationHub WebSocket DO (Phase 7)
 │   │   │   ├── middleware/           # Auth, CORS, error handling
-│   │   │   ├── routes/               # 11 route files (users, questions, assessments, classrooms, attempts, comments, notifications, websocket, etc.)
-│   │   │   ├── services/             # Business logic (12 service files)
+│   │   │   ├── routes/               # 12 route files (users, questions, ai-questions, assessments, classrooms, attempts, comments, notifications, websocket, etc.)
+│   │   │   ├── services/             # Business logic (13 service files, includes ai-question-parser)
 │   │   │   ├── lib/id-generator.ts   # Custom ID generation
 │   │   │   ├── env.ts                # Environment types
 │   │   │   └── index.ts              # Hono app entry
@@ -78,12 +78,13 @@ teaching-platform/
 
 ## 3. Core Modules & Responsibilities
 
-### Backend Routes (11 files)
+### Backend Routes (12 files)
 
 | Route File | Purpose | Methods | Key Endpoints |
 |-----------|---------|---------|---------------|
 | **users-route.ts** | User profile management | GET, PATCH | `/api/users` |
 | **questions-route.ts** | Question CRUD | GET, POST, PUT, DELETE | `/api/questions`, `/api/questions/bulk` |
+| **ai-question-routes.ts** | AI-native question creation | POST | `/api/questions/ai` (markdown frontmatter + base64 image) |
 | **tags-route.ts** | Tag management | GET, POST, PUT, DELETE | `/api/tags` |
 | **assessment-routes.ts** | Assessment creation & preview | GET, POST, PUT, DELETE | `/api/assessments`, `/api/assessments/:id/duplicate`, `/api/assessments/:id/preview` |
 | **classroom-routes.ts** | Classroom management | GET, POST, PUT, DELETE | `/api/classrooms`, `/api/classrooms/:id/regenerate-code` |
@@ -97,11 +98,12 @@ teaching-platform/
 | **settings-routes.ts** | Settings management (QA Bugfix) | GET, PUT | `/api/settings` |
 | **upload-route.ts** | Image asset storage | POST, GET | `/api/upload/image` |
 
-### Backend Services (12 files)
+### Backend Services (13 files)
 
 | Service | Purpose | Key Functions |
 |---------|---------|----------------|
 | **question-service.ts** | Question CRUD | Create, update, delete, bulk import |
+| **ai-question-parser.ts** | Markdown frontmatter parsing (AI API) | Parse YAML, extract checkboxes, validate structure |
 | **assessment-service.ts** | Assessment CRUD | Create, update, delete, duplicate |
 | **assessment-query-service.ts** | Complex assessment queries | Get with questions, filtering, pagination |
 | **assessment-generator-service.ts** | AI question generation logic | Generate, sample questions |
@@ -234,7 +236,7 @@ teaching-platform/
 
 ### Protected (/api/*)
 - **Users:** GET/PATCH `/api/users`
-- **Questions:** GET/POST/PUT/DELETE `/api/questions`, POST `/api/questions/bulk`
+- **Questions:** GET/POST/PUT/DELETE `/api/questions`, POST `/api/questions/ai` (AI API), POST `/api/questions/bulk`
 - **Tags:** GET/POST/PUT/DELETE `/api/tags`
 - **Assessments:** GET/POST/PUT/DELETE `/api/assessments`, POST `/generate`, GET `/preview`, POST `/duplicate`
 - **Classrooms:** GET/POST/PUT/DELETE `/api/classrooms`, POST `/regenerate-code`
@@ -397,16 +399,28 @@ pnpm run typecheck                # Type-check all
 
 ---
 
-## 13. Next Steps (Phase 6+)
+## 13. AI-Native Question Creation API
 
-1. **Analytics & Parent Dashboards** — Performance metrics, trend visualization
-2. **WebSocket Real-time Updates** — Live notifications, feed sync
-3. **Manual Grading Interface** — Essay/short-answer grading
-4. **AI Question Generation** — OpenAI integration
-5. **Student Progress Reports** — Downloadable transcripts
-6. **Mobile App** — React Native version
+**New:** `POST /api/questions/ai` (Apr 3, 2026)
+- Markdown frontmatter parsing (YAML: complexity, complexityType, tags, explanation)
+- Bare checkbox option extraction (`[x]` = correct, `[ ]` = incorrect)
+- Base64 image upload to R2 with URL injection
+- Tag auto-creation by name (scoped to teacher)
+- Partial success batch response (created count, failed count, per-question status)
+- Validation: 2-6 options, ≥1 correct, max 10K content, max 7M image, max 50 questions/request
+- Test coverage: 23 unit tests, all passing
 
 ---
 
-**Last Generated:** 2026-04-02 by docs-manager agent  
+## 14. Next Steps (Phase 9+)
+
+1. **Analytics & Parent Dashboards** — Performance metrics, trend visualization
+2. **Manual Grading Interface** — Essay/short-answer grading
+3. **Enhanced AI Integration** — OpenAI API, more generation options
+4. **Student Progress Reports** — Downloadable transcripts
+5. **Mobile App** — React Native version
+
+---
+
+**Last Generated:** 2026-04-03 by project-manager agent  
 **Codebase Compaction:** See `repomix-output.xml` for full repository pack

@@ -1,6 +1,6 @@
 # System Architecture — Teaching Platform
 
-**Current Phase:** Phase 7 + QA Bugfix Batch (JWT Refresh, Settings, Dashboard Stats)
+**Current Phase:** Phase 7 + QA Bugfix Batch + AI Question API (JWT Refresh, Settings, Dashboard Stats, AI-Native Question Creation)
 
 ---
 
@@ -134,6 +134,7 @@ Hono App (src/index.ts)
 │   ├── /api/questions
 │   │   ├── GET / — List questions with filters (tags, complexity, search, pagination)
 │   │   ├── POST / — Create question
+│   │   ├── POST /ai — Create from markdown frontmatter + bare checkboxes, base64 image, auto-create tags
 │   │   ├── POST /bulk — Bulk import questions
 │   │   ├── GET /:id — Get single question
 │   │   ├── PUT /:id — Update question

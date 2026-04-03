@@ -4,6 +4,31 @@ All significant changes, features, and fixes are documented here.
 
 ---
 
+## AI-Native Question Creation API (Apr 3, 2026)
+
+### Backend Changes
+- **NEW:** `POST /api/questions/ai` — Markdown frontmatter + bare checkbox parsing, base64 image upload to R2, tag auto-creation
+- **NEW:** `apps/api/src/services/ai-question-parser.ts` — Pure functions for YAML parsing, checkbox extraction, question validation
+- **NEW:** `apps/api/src/routes/ai-question-routes.ts` — API endpoint handler with partial success batch response
+- **NEW:** Zod schemas `aiQuestionItemSchema` + `aiCreateQuestionsSchema` in shared package
+- **UPDATED:** `apps/api/src/index.ts` — Register `/api/questions/ai` route (before `/api/questions` for proper routing)
+- **UPDATED:** `apps/api/package.json` — Added `js-yaml`, `@types/js-yaml`, `vitest` dependencies
+
+### Features
+- Parse YAML frontmatter (complexity, complexityType, tags, explanation)
+- Extract bare checkbox options (`[x]` = correct, `[ ]` = incorrect)
+- Upload base64 images to R2 with URL injection into content
+- Auto-create missing tags by name (scoped to teacher)
+- Partial success: process each question independently, return created + failed counts
+- Validation: 2-6 options per question, ≥1 correct, max 10K content, max 7M image, max 50 questions per request
+
+### Testing
+- 23 unit tests covering parser edge cases (malformed YAML, missing fields, checkbox variants, option validation)
+- All tests passing, typecheck clean
+- Code review applied: max length constraints, base64 newline handling, N+1 query prevention, tag name validation
+
+---
+
 ## QA Bugfix Batch (Apr 3, 2026)
 
 ### Frontend Changes
@@ -199,7 +224,8 @@ All significant changes, features, and fixes are documented here.
 
 | Version | Phase | Date | Status |
 |---------|-------|------|--------|
-| 1.5.1 | QA Bugfix | Apr 3, 2026 | Current (JWT refresh, Settings, Form validation) |
+| 1.6 | AI API | Apr 3, 2026 | Current (AI Question Creation API) |
+| 1.5.1 | QA Bugfix | Apr 3, 2026 | Completed (JWT refresh, Settings, Form validation) |
 | 1.5 | Phase 7 | Apr 2, 2026 | Completed (Real-time Notifications) |
 | 1.4 | Phase 5 | Apr 2, 2026 | Completed (Assessment Taking) |
 | 1.3 | Phase 4 | Apr 1, 2026 | Completed (Classroom) |
