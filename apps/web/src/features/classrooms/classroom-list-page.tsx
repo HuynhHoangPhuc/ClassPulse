@@ -24,6 +24,7 @@ export function ClassroomListPage() {
   const [showCreate, setShowCreate] = useState(false);
   const [newName, setNewName] = useState("");
   const [newDesc, setNewDesc] = useState("");
+  const [nameError, setNameError] = useState<string | null>(null);
   const [createdCode, setCreatedCode] = useState<string | null>(null);
 
   const { data, isLoading } = useQuery<{ items: ClassroomItem[] }>({
@@ -127,11 +128,14 @@ export function ClassroomListPage() {
                   <span className="text-sm font-medium" style={{ color: "var(--color-foreground)" }}>Name *</span>
                   <input
                     value={newName}
-                    onChange={(e) => setNewName(e.target.value)}
+                    onChange={(e) => { setNewName(e.target.value); setNameError(null); }}
                     placeholder="e.g. Math 101"
                     className="w-full px-3 py-2 rounded-xl border text-sm outline-none focus:border-[var(--color-primary)]"
-                    style={{ borderColor: "var(--color-border)", background: "var(--color-background)", color: "var(--color-foreground)" }}
+                    style={{ borderColor: nameError ? "var(--color-destructive)" : "var(--color-border)", background: "var(--color-background)", color: "var(--color-foreground)" }}
                   />
+                  {nameError && (
+                    <span className="text-xs" style={{ color: "var(--color-destructive)" }}>{nameError}</span>
+                  )}
                 </label>
                 <label className="block space-y-1">
                   <span className="text-sm font-medium" style={{ color: "var(--color-foreground)" }}>Description</span>
@@ -146,8 +150,14 @@ export function ClassroomListPage() {
                 </label>
                 <button
                   type="button"
-                  onClick={() => createMutation.mutate()}
-                  disabled={createMutation.isPending || !newName.trim()}
+                  onClick={() => {
+                    if (!newName.trim()) {
+                      setNameError("Classroom name is required.");
+                      return;
+                    }
+                    createMutation.mutate();
+                  }}
+                  disabled={createMutation.isPending}
                   className="w-full py-2 rounded-xl text-sm font-medium transition-opacity hover:opacity-90 disabled:opacity-40"
                   style={{ background: "var(--color-primary)", color: "#fff" }}
                 >

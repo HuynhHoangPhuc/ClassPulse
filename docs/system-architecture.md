@@ -1,6 +1,6 @@
 # System Architecture — Teaching Platform
 
-**Current Phase:** Phase 8 Complete (Parent Dashboard)
+**Current Phase:** Phase 7 + QA Bugfix Batch (JWT Refresh, Settings, Dashboard Stats)
 
 ---
 
@@ -182,6 +182,11 @@ Hono App (src/index.ts)
 │   │   ├── GET /unread-count — Get unread notification count
 │   │   ├── PUT /:id — Mark single notification as read
 │   │   └── PUT /read-all — Mark all as read
+│   ├── /api/dashboard (QA Bugfix)
+│   │   └── GET /stats — Get dashboard KPIs (student count, assessment count, avg score)
+│   ├── /api/settings (QA Bugfix)
+│   │   ├── GET / — Get user settings (profile, appearance, notifications)
+│   │   └── PUT / — Update user settings
 │   ├── /api/parent (Phase 8)
 │   │   ├── GET /students — List linked students
 │   │   ├── GET /students/:studentId/overview — KPIs + aggregated metrics
@@ -261,7 +266,7 @@ Hono App (src/index.ts)
 - `ui/empty-state.tsx` — Placeholder for empty lists
 
 ### API Integration
-- `lib/api-client.ts` — Hono RPC client (type-safe, inferred from AppType)
+- `lib/api-client.ts` — Hono RPC client (type-safe, inferred from AppType); includes 401 token refresh retry + sanitized error messages (QA Bugfix)
 - `lib/utils.ts` — Helper functions
 
 ---
@@ -359,6 +364,11 @@ pnpm run typecheck                # Type-check all (turborepo)
 - API routes enforce role checks (routes return 403 if unauthorized)
 - Frontend hides/shows features by role (e.g., "Create Assessment" only for teachers)
 
+### Token Refresh & Error Handling (QA Bugfix)
+- **fetchApi** now retries on 401 responses with automatic Clerk token refresh
+- Error messages sanitized to prevent leaking sensitive data (tokens, internal paths)
+- **Production requirement:** Use Clerk production keys to remove "Development mode" badge
+
 ---
 
 ## 10. Markdown & Content Rendering
@@ -391,6 +401,13 @@ pnpm run typecheck                # Type-check all (turborepo)
 ---
 
 ## 12. Frontend Routes & Features
+
+### QA Bugfix — Settings & Dashboard (Apr 3, 2026)
+- `/settings` — User settings page with tabs:
+  - **Profile** — Name, email, role information
+  - **Appearance** — Dark/light mode preference, UI customization
+  - **Notifications** — Email notification preferences, notification toggles
+- Features: Form validation with inline errors, settings persistence via API
 
 ### Phase 3 — Assessment Bank (Complete)
 - `/assessments` — List page with filtering, sorting, pagination

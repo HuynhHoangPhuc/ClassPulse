@@ -48,20 +48,20 @@ export function QuestionEditorPage({ questionId }: QuestionEditorPageProps) {
   const [explanation, setExplanation] = useState("");
   const [showExplanation, setShowExplanation] = useState(false);
   const [tagIds, setTagIds] = useState<string[]>([]);
-  const [token, setToken] = useState<string | null>(null);
+  const [initialToken, setInitialToken] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [loadError, setLoadError] = useState<string | null>(null);
   const [saveError, setSaveError] = useState<string | null>(null);
 
-  // Fetch token once
+  // Fetch token for child components that need it (TagSelector, ImageUploadButton)
   useEffect(() => {
-    getToken().then(setToken).catch(console.error);
+    getToken().then(setInitialToken).catch(console.error);
   }, [getToken]);
 
   // Load existing question for edit mode
   useEffect(() => {
-    if (!questionId || !token) return;
-    fetchApi(`/api/questions/${questionId}`, {}, token)
+    if (!questionId || !initialToken) return;
+    fetchApi(`/api/questions/${questionId}`, {}, initialToken)
       .then((raw) => {
         const q = raw as Question & { tags: { id: string }[] };
         setContent(q.content);
@@ -79,7 +79,7 @@ export function QuestionEditorPage({ questionId }: QuestionEditorPageProps) {
         setTagIds(q.tags.map((t) => t.id));
       })
       .catch((err) => setLoadError(err instanceof Error ? err.message : "Failed to load question."));
-  }, [questionId, token]);
+  }, [questionId, initialToken]);
 
   // ── Options helpers ──────────────────────────────────────────────────────────
 
@@ -104,7 +104,8 @@ export function QuestionEditorPage({ questionId }: QuestionEditorPageProps) {
   async function handleImageUpload(file: File): Promise<string> {
     const form = new FormData();
     form.append("file", file);
-    const data = await fetchApi("/api/upload/image", { method: "POST", body: form }, token) as { url: string };
+    const t = await getToken();
+    const data = await fetchApi("/api/upload/image", { method: "POST", body: form }, t, getToken) as { url: string };
     return data.url;
   }
 
@@ -120,7 +121,7 @@ export function QuestionEditorPage({ questionId }: QuestionEditorPageProps) {
     setSaving(true);
 
     try {
-      const t = token ?? await getToken();
+      const t = await getToken();
       const body = {
         content,
         options: options.map(({ id, text, isCorrect }) => ({ id, text, isCorrect })),
@@ -131,9 +132,9 @@ export function QuestionEditorPage({ questionId }: QuestionEditorPageProps) {
       };
 
       if (isEdit) {
-        await fetchApi(`/api/questions/${questionId}`, { method: "PUT", body: JSON.stringify(body) }, t);
+        await fetchApi(`/api/questions/${questionId}`, { method: "PUT", body: JSON.stringify(body) }, t, getToken);
       } else {
-        await fetchApi("/api/questions", { method: "POST", body: JSON.stringify(body) }, t);
+        await fetchApi("/api/questions", { method: "POST", body: JSON.stringify(body) }, t, getToken);
       }
 
       navigate({ to: "/questions" });
@@ -205,7 +206,7 @@ export function QuestionEditorPage({ questionId }: QuestionEditorPageProps) {
               onImageUpload={handleImageUpload}
               placeholder="Write your question in Markdown…"
             />
-            <ImageUploadButton onUpload={(url) => setContent((c) => c + `\n\n![image](${url})`)} token={token} />
+            <ImageUploadButton onUpload={(url) => setContent((c) => c + `\n\n![image](${url})`)} token={initialToken} />
           </section>
 
           {/* Options */}
@@ -263,7 +264,7 @@ export function QuestionEditorPage({ questionId }: QuestionEditorPageProps) {
             <label className="text-sm font-medium" style={{ color: "var(--color-foreground)" }}>
               Tags
             </label>
-            <TagSelector selectedTagIds={tagIds} onChange={setTagIds} token={token} />
+            <TagSelector selectedTagIds={tagIds} onChange={setTagIds} token={initialToken} />
           </section>
 
           {/* Complexity */}

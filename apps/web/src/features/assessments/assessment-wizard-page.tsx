@@ -53,6 +53,7 @@ export function AssessmentWizardPage() {
   const [step, setStep] = useState(0);
   const [state, setState] = useState<WizardState>(loadState);
   const [error, setError] = useState<string | null>(null);
+  const [validationError, setValidationError] = useState<string | null>(null);
   const [shortfalls, setShortfalls] = useState<Array<{ tagId: string; complexity: number; needed: number; available: number }>>([]);
 
   // Persist wizard state to sessionStorage
@@ -129,6 +130,18 @@ export function AssessmentWizardPage() {
   }
 
   function handleNext() {
+    if (!canProceed()) {
+      if (step === 0) setValidationError("Title is required.");
+      if (step === 1) {
+        setValidationError(
+          state.questionMode === "manual"
+            ? "Select at least one question."
+            : "Add at least one tag for auto-generation.",
+        );
+      }
+      return;
+    }
+    setValidationError(null);
     if (step < STEPS.length - 1) {
       setStep(step + 1);
     } else {
@@ -180,7 +193,7 @@ export function AssessmentWizardPage() {
           <div key={s} className="flex items-center gap-2">
             <button
               type="button"
-              onClick={() => i < step && setStep(i)}
+              onClick={() => { if (i < step) { setStep(i); setValidationError(null); } }}
               className="flex items-center gap-1.5 text-sm font-medium transition-colors"
               style={{ color: i === step ? "var(--color-primary)" : i < step ? "var(--color-foreground)" : "var(--color-muted-foreground)" }}
             >
@@ -234,9 +247,14 @@ export function AssessmentWizardPage() {
         )}
       </div>
 
-      {/* Error message */}
-      {error && (
-        <p className="text-sm" style={{ color: "var(--color-destructive)" }}>{error}</p>
+      {/* Validation / error message */}
+      {(validationError || error) && (
+        <p
+          className="text-sm px-3 py-2 rounded-[var(--radius-card)] border"
+          style={{ borderColor: "var(--color-destructive)", color: "var(--color-destructive)" }}
+        >
+          {validationError || error}
+        </p>
       )}
 
       {/* Navigation buttons */}
@@ -253,7 +271,7 @@ export function AssessmentWizardPage() {
         <button
           type="button"
           onClick={handleNext}
-          disabled={!canProceed() || createMutation.isPending}
+          disabled={createMutation.isPending}
           className="flex items-center gap-1.5 px-4 py-2 rounded-xl text-sm font-medium transition-opacity hover:opacity-90 disabled:opacity-40"
           style={{ background: "var(--color-primary)", color: "#fff" }}
         >

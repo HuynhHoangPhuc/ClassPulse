@@ -4,6 +4,26 @@ All significant changes, features, and fixes are documented here.
 
 ---
 
+## QA Bugfix Batch (Apr 3, 2026)
+
+### Frontend Changes
+- **FIXED:** `fetchApi()` in `lib/api-client.ts` — Retry on 401 with automatic token refresh, sanitized error messages to prevent token leakage
+- **NEW:** Settings page (`/settings`) — Profile, appearance, and notifications preference sections
+- **FIXED:** Assessment wizard and classroom creation forms — Show inline validation errors from server
+- **FIXED:** Pluralization — Changed "1 members" to "1 member" in classroom views
+
+### Backend Changes
+- **NEW:** `GET /api/dashboard/stats` — Dashboard KPI endpoint returning student count, assessment count, avg score
+- **UPDATED:** Error response format — Consistent error messages without sensitive data exposure
+
+### Features
+- Token refresh on 401 response (Clerk JWT expiration handling)
+- Settings UI for profile management, theme preferences, notification toggles
+- Real-time form validation feedback in wizards
+- Dashboard stats endpoint for KPI cards
+
+---
+
 ## Phase 7 - Real-time Notifications (Apr 2, 2026)
 
 ### Backend Changes
@@ -179,7 +199,8 @@ All significant changes, features, and fixes are documented here.
 
 | Version | Phase | Date | Status |
 |---------|-------|------|--------|
-| 1.5 | Phase 7 | Apr 2, 2026 | Current (Real-time Notifications) |
+| 1.5.1 | QA Bugfix | Apr 3, 2026 | Current (JWT refresh, Settings, Form validation) |
+| 1.5 | Phase 7 | Apr 2, 2026 | Completed (Real-time Notifications) |
 | 1.4 | Phase 5 | Apr 2, 2026 | Completed (Assessment Taking) |
 | 1.3 | Phase 4 | Apr 1, 2026 | Completed (Classroom) |
 | 1.2 | Phase 3 | Apr 1, 2026 | Completed (Assessment Bank) |

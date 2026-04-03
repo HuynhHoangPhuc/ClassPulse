@@ -93,7 +93,7 @@ export function ClassroomDetailPage({ classroomId }: ClassroomDetailPageProps) {
       {/* Meta bar */}
       <div className="flex items-center gap-3 flex-wrap">
         <span className="flex items-center gap-1 text-sm" style={{ color: "var(--color-muted-foreground)" }}>
-          <Users size={14} /> {classroom.memberCount} members
+          <Users size={14} /> {classroom.memberCount} member{classroom.memberCount !== 1 ? "s" : ""}
         </span>
         <button
           type="button"

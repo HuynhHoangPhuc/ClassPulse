@@ -1,8 +1,8 @@
 # Codebase Summary — Teaching Platform
 
-**Last Updated:** 2026-04-02  
-**Phase:** Phase 7 Complete (Real-time Notifications)  
-**Total Files:** 180 | **Total Tokens:** ~240K
+**Last Updated:** 2026-04-03
+**Phase:** Phase 7 + QA Bugfix Batch
+**Total Files:** 185 | **Total Tokens:** ~250K
 
 ---
 
@@ -93,6 +93,8 @@ teaching-platform/
 | **attempt-routes.ts** | Assessment taking | POST, GET | `/api/attempts/start`, `/save`, `/submit`, `/results`, `/detail` |
 | **notification-routes.ts** | User notifications (Phase 7) | GET, PUT | `/api/notifications`, `/api/notifications/unread-count`, `/api/notifications/:id`, `/api/notifications/read-all` |
 | **websocket-routes.ts** | WebSocket upgrade (Phase 7) | GET | `/ws/classroom/:classroomId?token=<jwt>` |
+| **dashboard-routes.ts** | Dashboard KPIs (QA Bugfix) | GET | `/api/dashboard/stats` |
+| **settings-routes.ts** | Settings management (QA Bugfix) | GET, PUT | `/api/settings` |
 | **upload-route.ts** | Image asset storage | POST, GET | `/api/upload/image` |
 
 ### Backend Services (12 files)
@@ -159,6 +161,11 @@ teaching-platform/
 - notification-panel.tsx — Dropdown panel showing notification list
 - notification-item.tsx — Individual notification card
 - notification-toast.tsx — Toast alert for new real-time events
+
+#### Settings Feature (3 components, QA Bugfix)
+- settings-page.tsx — Settings layout with tabs (profile, appearance, notifications)
+- profile-settings-tab.tsx — User profile editor
+- appearance-settings-tab.tsx — Theme and UI preferences
 
 ### Shared Package (Types & Constants)
 
@@ -237,6 +244,8 @@ teaching-platform/
 - **Member Search:** GET `/classrooms/:id/members/search` (for @mention autocomplete)
 - **Attempts:** POST `/start`, `/save`, `/submit`, GET `/results`, `/detail`
 - **Notifications (Phase 7):** GET `/api/notifications`, GET `/api/notifications/unread-count`, PUT `/api/notifications/:id`, PUT `/api/notifications/read-all`
+- **Dashboard (QA Bugfix):** GET `/api/dashboard/stats`
+- **Settings (QA Bugfix):** GET/PUT `/api/settings`
 - **Upload:** POST/GET `/api/upload/image`
 
 ---

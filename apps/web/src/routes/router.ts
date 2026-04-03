@@ -23,6 +23,7 @@ import {
   questionNewRoute,
   questionEditRoute,
 } from "./questions-routes";
+import { settingsRoute } from "./settings-route";
 
 // ---------------------------------------------------------------------------
 // Index redirect: / → /dashboard
@@ -60,6 +61,7 @@ const routeTree = rootRoute.addChildren([
     assessmentResultsRoute,
     teacherSubmissionsRoute,
     teacherSubmissionDetailRoute,
+    settingsRoute,
   ]),
 ]);
 
