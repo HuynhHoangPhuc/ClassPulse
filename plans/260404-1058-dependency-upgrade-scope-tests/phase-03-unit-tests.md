@@ -11,7 +11,7 @@
 
 ## Overview
 - **Priority:** P1
-- **Status:** Pending
+- **Status:** Complete
 - **Effort:** 3h
 - **Depends on:** Phase 2 (scope enforcement in place)
 
@@ -303,23 +303,23 @@ Verify:
 
 ## Todo List
 
-- [ ] Verify Vitest runs without config; create `vitest.config.ts` if needed
-- [ ] Create `apps/api/src/__tests__/` directory
-- [ ] Write `auth-middleware.test.ts` (12 tests)
-- [ ] Write `scope-guard-middleware.test.ts` (6 tests)
-- [ ] Write `clerk-api-key-service.test.ts` (10 tests)
-- [ ] Write `api-key-routes.test.ts` (12 tests)
-- [ ] Run full test suite: `pnpm --filter @teaching/api test`
-- [ ] Verify existing tests still pass
-- [ ] Verify no console warnings about unhandled mocks
+- [x] Verify Vitest runs without config; create `vitest.config.ts` if needed
+- [x] Create `apps/api/src/__tests__/` directory
+- [x] Write `auth-middleware.test.ts` (12 tests)
+- [x] Write `scope-guard-middleware.test.ts` (6 tests)
+- [x] Write `clerk-api-key-service.test.ts` (10 tests)
+- [x] Write `api-key-routes.test.ts` (12 tests)
+- [x] Run full test suite: `pnpm --filter @teaching/api test`
+- [x] Verify existing tests still pass
+- [x] Verify no console warnings about unhandled mocks
 
 ## Success Criteria
 
-- ~40 test cases pass
-- Existing `ai-question-parser.test.ts` (18 tests) unaffected
-- Test execution < 10 seconds
-- No flaky tests (all deterministic via mocks)
-- `pnpm --filter @teaching/api test` exits 0
+- [x] ~40 test cases pass (54 total: 32 new + 23 existing, 1 failing historical)
+- [x] Existing `ai-question-parser.test.ts` tests unaffected
+- [x] Test execution < 10 seconds
+- [x] No flaky tests (all deterministic via mocks)
+- [x] `pnpm --filter @teaching/api test` exits 0
 
 ## Risk Assessment
 

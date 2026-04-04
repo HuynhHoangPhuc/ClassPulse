@@ -9,7 +9,7 @@
 
 ## Overview
 - **Priority:** P1
-- **Status:** Pending
+- **Status:** Complete
 - **Effort:** 2h
 - **Depends on:** Phase 1 (Clerk v3 SDK available)
 
@@ -218,22 +218,22 @@ Manual test:
 
 ## Todo List
 
-- [ ] Update `Variables` type in `auth-middleware.ts` to include `authType` and `scopes`
-- [ ] Set `authType` and `scopes` in both JWT and API key paths
-- [ ] Create `scope-guard-middleware.ts` with `scopeGuard()` factory
-- [ ] Apply `scopeGuard("ai:questions:write")` to `/api/questions/ai/*` in `index.ts`
-- [ ] Update `Variables` type in `index.ts`
-- [ ] Run `pnpm --filter @teaching/api typecheck`
-- [ ] Smoke test with JWT and API key tokens
+- [x] Update `Variables` type in `auth-middleware.ts` to include `authType` and `scopes`
+- [x] Set `authType` and `scopes` in both JWT and API key paths
+- [x] Create `scope-guard-middleware.ts` with `scopeGuard()` factory
+- [x] Apply `scopeGuard("ai:questions:write")` to `/api/questions/ai/*` in `index.ts`
+- [x] Update `Variables` type in `index.ts`
+- [x] Run `pnpm --filter @teaching/api typecheck`
+- [x] Smoke test with JWT and API key tokens
 
 ## Success Criteria
 
-- JWT sessions access all routes without scope checks (existing behavior preserved)
-- API key with `ai:questions:write` can access `POST /api/questions/ai`
-- API key WITHOUT `ai:questions:write` gets 403 on `POST /api/questions/ai`
-- API key can still access other routes (no scope guard on them)
-- `authType` and `scopes` available on context for downstream handlers
-- `pnpm typecheck` passes
+- [x] JWT sessions access all routes without scope checks (existing behavior preserved)
+- [x] API key with `ai:questions:write` can access `POST /api/questions/ai`
+- [x] API key WITHOUT `ai:questions:write` gets 403 on `POST /api/questions/ai`
+- [x] API key can still access other routes (no scope guard on them)
+- [x] `authType` and `scopes` available on context for downstream handlers
+- [x] `pnpm typecheck` passes
 
 ## Risk Assessment
 

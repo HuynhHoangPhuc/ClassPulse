@@ -1,12 +1,13 @@
 ---
 title: "Dependency Upgrade + API Key Scope Enforcement + Unit Tests"
 description: "Upgrade all deps (Clerk v1->v3), add scope enforcement to auth middleware, write ~40 unit tests"
-status: pending
+status: complete
 priority: P1
 effort: 8h
 branch: main
 tags: [clerk, auth, api-keys, testing, upgrade]
 created: 2026-04-04
+completed: 2026-04-04
 ---
 
 # Dependency Upgrade + Scope Enforcement + Unit Tests
@@ -19,9 +20,9 @@ Three sequential tasks: (1) upgrade all monorepo deps to latest (critical: `@cle
 
 | # | Phase | Status | Effort | Files Modified | Depends On |
 |---|-------|--------|--------|----------------|------------|
-| 1 | [Upgrade Dependencies](./phase-01-upgrade-dependencies.md) | Pending | 3h | `package.json` files, `clerk-api-key-service.ts`, `auth-middleware.ts` | -- |
-| 2 | [Scope Enforcement](./phase-02-scope-enforcement.md) | Pending | 2h | `auth-middleware.ts`, `index.ts`, `env.ts` | Phase 1 |
-| 3 | [Unit Tests](./phase-03-unit-tests.md) | Pending | 3h | new test files in `apps/api/src/__tests__/` | Phase 2 |
+| 1 | [Upgrade Dependencies](./phase-01-upgrade-dependencies.md) | Complete | 3h | `package.json` files, `clerk-api-key-service.ts`, `auth-middleware.ts` | -- |
+| 2 | [Scope Enforcement](./phase-02-scope-enforcement.md) | Complete | 2h | `auth-middleware.ts`, `index.ts`, `env.ts` | Phase 1 |
+| 3 | [Unit Tests](./phase-03-unit-tests.md) | Complete | 3h | new test files in `apps/api/src/__tests__/` | Phase 2 |
 
 ## Key Architecture Decisions
 
@@ -47,9 +48,9 @@ Three sequential tasks: (1) upgrade all monorepo deps to latest (critical: `@cle
 
 ## Success Criteria
 
-- [ ] `pnpm typecheck` passes across all workspaces
-- [ ] `@clerk/backend` is v3.x in `apps/api/package.json`
-- [ ] API key tokens with wrong scope get 403 on protected routes
-- [ ] JWT sessions skip scope checks entirely
-- [ ] ~40 test cases pass via `pnpm --filter @teaching/api test`
-- [ ] No runtime regressions on `pnpm --filter @teaching/api dev`
+- [x] `pnpm typecheck` passes across all workspaces
+- [x] `@clerk/backend` is v3.x in `apps/api/package.json`
+- [x] API key tokens with wrong scope get 403 on protected routes
+- [x] JWT sessions skip scope checks entirely
+- [x] ~40 test cases pass via `pnpm --filter @teaching/api test`
+- [x] No runtime regressions on `pnpm --filter @teaching/api dev`

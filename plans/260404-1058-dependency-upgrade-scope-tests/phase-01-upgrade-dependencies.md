@@ -10,7 +10,7 @@
 
 ## Overview
 - **Priority:** P1
-- **Status:** Pending
+- **Status:** Complete
 - **Effort:** 3h
 - **Depends on:** Nothing
 
@@ -169,23 +169,23 @@ pnpm --filter @teaching/web dev  # manual: verify login + dashboard loads
 
 ## Todo List
 
-- [ ] Run `pnpm update --latest -r` from monorepo root
-- [ ] Run `pnpm typecheck` — fix any breakage from general upgrades
-- [ ] Run `npx @clerk/upgrade` to detect Clerk-specific breaking changes
-- [ ] Refactor `clerk-api-key-service.ts` to use `createClerkClient().apiKeys.*`
-- [ ] Verify `auth-middleware.ts` still works with updated service (import unchanged)
-- [ ] Verify `api-key-routes.ts` still works with updated service (import unchanged)
-- [ ] Run `pnpm typecheck` again after service refactor
-- [ ] Run `pnpm --filter @teaching/api test` (existing AI parser tests)
-- [ ] Build and smoke test web app
+- [x] Run `pnpm update --latest -r` from monorepo root
+- [x] Run `pnpm typecheck` — fix any breakage from general upgrades
+- [x] Run `npx @clerk/upgrade` to detect Clerk-specific breaking changes
+- [x] Refactor `clerk-api-key-service.ts` to use `createClerkClient().apiKeys.*`
+- [x] Verify `auth-middleware.ts` still works with updated service (import unchanged)
+- [x] Verify `api-key-routes.ts` still works with updated service (import unchanged)
+- [x] Run `pnpm typecheck` again after service refactor
+- [x] Run `pnpm --filter @teaching/api test` (existing AI parser tests)
+- [x] Build and smoke test web app
 
 ## Success Criteria
 
-- `@clerk/backend` version is `^3.x` in `apps/api/package.json`
-- `clerk-api-key-service.ts` uses SDK methods, no manual `fetch()` calls
-- `pnpm typecheck` passes across all workspaces
-- Existing test suite passes (`ai-question-parser.test.ts`)
-- No runtime errors on `pnpm dev`
+- [x] `@clerk/backend` version is `^3.x` in `apps/api/package.json`
+- [x] `clerk-api-key-service.ts` uses SDK methods, no manual `fetch()` calls
+- [x] `pnpm typecheck` passes across all workspaces
+- [x] Existing test suite passes (`ai-question-parser.test.ts`)
+- [x] No runtime errors on `pnpm dev`
 
 ## Risk Assessment
 

@@ -237,6 +237,7 @@ export function QuestionContent({ content }: Props) {
 ### Unit Tests
 - Jest for TypeScript/JavaScript tests
 - Test file naming: `{module}.test.ts`
+- Test file locations: `apps/{app}/__tests__/{directory}/{file}.test.ts` (mirrors src structure)
 - Keep tests focused: one concern per test
 - Use descriptive test names
 
@@ -514,7 +515,8 @@ apps/api/src/
 ├── durable-objects/
 │   └── notification-hub.ts              # WebSocket connection manager (Phase 7)
 ├── middleware/
-│   ├── auth-middleware.ts               # JWT verification
+│   ├── auth-middleware.ts               # Dual JWT/API key verification
+│   ├── scope-guard-middleware.ts        # API key scope enforcement (Phase 8)
 │   ├── error-middleware.ts              # Error handling
 │   └── cors-middleware.ts               # CORS
 ├── routes/

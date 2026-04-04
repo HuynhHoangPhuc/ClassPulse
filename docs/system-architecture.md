@@ -12,21 +12,24 @@ Teaching Platform is a monorepo-based SaaS for educators to create, assign, and 
 
 | Layer | Technology | Version |
 |-------|-----------|---------|
-| **Runtime** | Node.js | 20+ |
-| **Monorepo** | Turborepo | 2.4.0 |
-| **API** | Hono | 4.7 |
-| **Database** | Drizzle ORM + SQLite/D1 | 0.38 |
-| **Auth** | Clerk | JWT + webhooks |
+| **Runtime** | Node.js | 22 (GitHub Actions) |
+| **Language** | TypeScript | 6.0.2 |
+| **Monorepo** | Turborepo | 2.9.3 |
+| **API** | Hono | 4.12.10 |
+| **Database** | Drizzle ORM + SQLite/D1 | 0.45.2 |
+| **Auth** | Clerk (@clerk/backend v3) | 3.2.4 |
 | **Web Framework** | React | 19 |
 | **Build Tool** | Vite | 6 |
 | **Router** | TanStack Router | 1.95 (code-based) |
 | **State** | TanStack Query | 5.65 |
 | **Styling** | Tailwind CSS | 4.0 (CSS-based) |
+| **Validation** | Zod | 4.3.6 |
 | **Icons** | Lucide React | Latest |
-| **Package Manager** | pnpm | 9.15+ |
+| **Package Manager** | pnpm | 9.15.0 |
 | **Markdown** | react-markdown + remark plugins | Latest |
 | **Math Rendering** | rehype-katex + remark-math | Latest |
 | **Code Highlighting** | rehype-highlight | Latest |
+| **Testing** | Vitest | 4.1.2 |
 
 ---
 
@@ -352,9 +355,10 @@ pnpm run typecheck                # Type-check all (turborepo)
 
 ### Dual Authentication (JWT + API Key)
 - **Primary (JWT):** Browser-based clients authenticate via Clerk JWT issued on sign-in
-- **Fallback (API Key):** Third-party tools (AI agents) authenticate via Clerk API keys stored in `users` table
-- **authMiddleware** attempts JWT validation first; on failure, validates API key
-- Both flows set `userId` on request context for downstream authorization
+- **Fallback (API Key):** Third-party tools (AI agents) authenticate via Clerk API keys from Clerk's backend SDK
+- **authMiddleware** (`src/middleware/auth-middleware.ts`) attempts JWT validation first; on failure, validates API key via `@clerk/backend` v3 SDK
+- Both flows set `userId`, `authType` ("session"|"api_key"), and `scopes` (string[]) on request context
+- **scopeGuard middleware** (`src/middleware/scope-guard-middleware.ts`) enforces scope restrictions for API key tokens (JWT sessions bypass scope checks, using role-based RBAC instead)
 - API keys scoped to user, created/managed via `/api/users/api-keys` endpoints
 
 ### JWT Validation
