@@ -3,8 +3,9 @@ import type { MiddlewareHandler } from "hono";
 import type { Env } from "../env.js";
 import { verifyApiKey } from "../services/clerk-api-key-service.js";
 
-// Extend Hono context variables with authenticated userId
-type Variables = { userId: string };
+// Auth context variables set by middleware
+type AuthType = "session" | "api_key";
+type Variables = { userId: string; authType: AuthType; scopes: string[] };
 
 /**
  * Dual auth middleware: tries Clerk JWT first, falls back to Clerk API Key.
@@ -28,6 +29,8 @@ export const authMiddleware: MiddlewareHandler<Env & { Variables: Variables }> =
 
       if (payload?.sub) {
         c.set("userId", payload.sub);
+        c.set("authType", "session");
+        c.set("scopes", []);
         await next();
         return;
       }
@@ -44,6 +47,8 @@ export const authMiddleware: MiddlewareHandler<Env & { Variables: Variables }> =
       }
 
       c.set("userId", apiKey.subject);
+      c.set("authType", "api_key");
+      c.set("scopes", apiKey.scopes ?? []);
       await next();
     } catch {
       return c.json({ error: "Invalid token or API key" }, 401);

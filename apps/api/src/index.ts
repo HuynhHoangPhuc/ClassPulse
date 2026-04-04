@@ -19,8 +19,9 @@ import { notificationRoutes } from "./routes/notification-routes.js";
 import { parentRoutes } from "./routes/parent-routes.js";
 import { dashboardRoutes } from "./routes/dashboard-routes.js";
 import { apiKeyRoutes } from "./routes/api-key-routes.js";
+import { scopeGuard } from "./middleware/scope-guard-middleware.js";
 
-type Variables = { userId: string };
+type Variables = { userId: string; authType: "session" | "api_key"; scopes: string[] };
 
 const app = new Hono<Env & { Variables: Variables }>();
 
@@ -38,6 +39,9 @@ app.route("/", websocketRoutes);
 
 // ── Auth guard for all /api/* routes ──────────────────────────────────────────
 app.use("/api/*", authMiddleware);
+
+// ── Scope guard for API key restricted routes ────────────────────────────────
+app.use("/api/questions/ai/*", scopeGuard("ai:questions:write"));
 
 // ── Protected API routes ───────────────────────────────────────────────────────
 const routes = app

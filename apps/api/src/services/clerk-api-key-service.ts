@@ -1,10 +1,9 @@
 /**
- * Clerk API Keys service — thin wrapper over Clerk's REST API.
- * The @clerk/backend SDK (v1.x) doesn't expose apiKeys methods,
- * so we call the REST endpoints directly.
+ * Clerk API Keys service — wraps @clerk/backend SDK v3 apiKeys methods.
+ * Keeps function signatures stable so downstream imports don't change.
  */
 
-const CLERK_API_BASE = "https://api.clerk.com/v1"
+import { createClerkClient } from "@clerk/backend"
 
 interface ClerkApiKey {
   id: string
@@ -25,31 +24,8 @@ interface ClerkApiKeyWithSecret extends ClerkApiKey {
   secret: string
 }
 
-interface ClerkApiKeyListResponse {
-  data: ClerkApiKey[]
-  totalCount: number
-}
-
-async function clerkFetch<T>(
-  path: string,
-  secretKey: string,
-  options: RequestInit = {},
-): Promise<T> {
-  const res = await fetch(`${CLERK_API_BASE}${path}`, {
-    ...options,
-    headers: {
-      Authorization: `Bearer ${secretKey}`,
-      "Content-Type": "application/json",
-      ...options.headers,
-    },
-  })
-
-  if (!res.ok) {
-    const body = await res.text().catch(() => "")
-    throw new Error(`Clerk API error (${res.status}): ${body}`)
-  }
-
-  return res.json() as Promise<T>
+function getClient(secretKey: string) {
+  return createClerkClient({ secretKey })
 }
 
 /** Verify an API key secret. Returns key metadata if valid, throws on invalid/revoked/expired. */
@@ -57,10 +33,9 @@ export async function verifyApiKey(
   secret: string,
   secretKey: string,
 ): Promise<ClerkApiKey> {
-  return clerkFetch<ClerkApiKey>("/api_keys/verify", secretKey, {
-    method: "POST",
-    body: JSON.stringify({ secret }),
-  })
+  const client = getClient(secretKey)
+  const result = await client.apiKeys.verify(secret)
+  return result as unknown as ClerkApiKey
 }
 
 /** Create a new API key tied to a user. Returns the key with secret (shown only once). */
@@ -74,17 +49,16 @@ export async function createApiKey(
     secondsUntilExpiration?: number
   },
 ): Promise<ClerkApiKeyWithSecret> {
-  return clerkFetch<ClerkApiKeyWithSecret>("/api_keys", secretKey, {
-    method: "POST",
-    body: JSON.stringify({
-      name: params.name,
-      subject: params.subject,
-      description: params.description,
-      scopes: params.scopes ?? ["ai:questions:write"],
-      createdBy: params.subject,
-      secondsUntilExpiration: params.secondsUntilExpiration,
-    }),
+  const client = getClient(secretKey)
+  const result = await client.apiKeys.create({
+    name: params.name,
+    subject: params.subject,
+    description: params.description,
+    scopes: params.scopes ?? ["ai:questions:write"],
+    createdBy: params.subject,
+    secondsUntilExpiration: params.secondsUntilExpiration,
   })
+  return result as unknown as ClerkApiKeyWithSecret
 }
 
 /** List API keys for a given subject (user ID). */
@@ -92,11 +66,9 @@ export async function listApiKeys(
   secretKey: string,
   subject: string,
 ): Promise<ClerkApiKey[]> {
-  const result = await clerkFetch<ClerkApiKeyListResponse>(
-    `/api_keys?subject=${encodeURIComponent(subject)}`,
-    secretKey,
-  )
-  return result.data
+  const client = getClient(secretKey)
+  const result = await client.apiKeys.list({ subject })
+  return result.data as unknown as ClerkApiKey[]
 }
 
 /** Revoke an API key by ID. */
@@ -104,10 +76,9 @@ export async function revokeApiKey(
   secretKey: string,
   apiKeyId: string,
 ): Promise<ClerkApiKey> {
-  return clerkFetch<ClerkApiKey>(`/api_keys/${encodeURIComponent(apiKeyId)}/revoke`, secretKey, {
-    method: "POST",
-    body: JSON.stringify({ revocationReason: "Revoked by user" }),
-  })
+  const client = getClient(secretKey)
+  const result = await client.apiKeys.revoke({ apiKeyId, revocationReason: "Revoked by user" })
+  return result as unknown as ClerkApiKey
 }
 
 export type { ClerkApiKey, ClerkApiKeyWithSecret }
