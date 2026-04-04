@@ -4,6 +4,33 @@ All significant changes, features, and fixes are documented here.
 
 ---
 
+## Agent Skill: ClassPulse Question Creator (Apr 4, 2026)
+
+### New Integration
+- **NEW:** `skills/classpulse-question-creator/` — External AI agent skill for generating and pushing MCQ questions
+- **NEW:** Skill components:
+  - `SKILL.md` — Agent instructions and workflow
+  - `references/api-reference.md` — Complete API reference for questions/ai endpoint
+  - `references/markdown-format.md` — Question markdown format specification
+  - `scripts/push-questions.py` — CLI tool for bulk uploading (auto-batches >50 questions)
+
+### Features
+- Multi-question generation with Bloom's Taxonomy complexity (1-5 levels)
+- Markdown frontmatter parsing (complexity, complexityType, tags, explanation)
+- Bare checkbox syntax for question options (`[x]` correct, `[ ]` incorrect)
+- Base64 image embedding with automatic upload to R2
+- Auto-creation of missing tags (scoped to authenticated user)
+- Batch processing (1-50 per request, CLI auto-batches larger sets)
+- API key authentication with `ai:questions:write` scope enforcement
+- Partial success reporting (created/failed question counts)
+
+### Integration Points
+- Leverages existing `POST /api/questions/ai` endpoint (Phase 7+ AI Question API)
+- Uses `GET /api/tags` for existing tag lookup
+- Follows API validation rules: 2-6 options/question, ≥1 correct, max 10K content, max 7M image
+
+---
+
 ## AI-Native Question Creation API (Apr 3, 2026)
 
 ### Backend Changes
@@ -224,7 +251,8 @@ All significant changes, features, and fixes are documented here.
 
 | Version | Phase | Date | Status |
 |---------|-------|------|--------|
-| 1.6 | AI API | Apr 3, 2026 | Current (AI Question Creation API) |
+| 1.7 | Agent Skill | Apr 4, 2026 | Current (ClassPulse Question Creator agent skill) |
+| 1.6 | AI API | Apr 3, 2026 | Completed (AI Question Creation API) |
 | 1.5.1 | QA Bugfix | Apr 3, 2026 | Completed (JWT refresh, Settings, Form validation) |
 | 1.5 | Phase 7 | Apr 2, 2026 | Completed (Real-time Notifications) |
 | 1.4 | Phase 5 | Apr 2, 2026 | Completed (Assessment Taking) |

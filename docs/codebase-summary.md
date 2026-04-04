@@ -1,8 +1,8 @@
 # Codebase Summary — Teaching Platform
 
-**Last Updated:** 2026-04-03
-**Phase:** Phase 7 + QA Bugfix Batch + AI Question API
-**Total Files:** 188 | **Total Tokens:** ~265K
+**Last Updated:** 2026-04-04
+**Phase:** Phase 7 + QA Bugfix Batch + AI Question API + Agent Skills
+**Total Files:** 192 (including agent skills) | **Total Tokens:** ~275K
 
 ---
 
@@ -55,6 +55,15 @@ teaching-platform/
 │       │   ├── types/                # User, question, assessment, classroom, notification types
 │       │   └── schemas/              # Zod validation schemas
 │       └── tsconfig.json
+│
+├── skills/                           # External AI agent skills
+│   └── classpulse-question-creator/  # Question generation agent (Apr 4, 2026)
+│       ├── SKILL.md                  # Agent instructions and workflow
+│       ├── references/               # Documentation
+│       │   ├── api-reference.md      # /api/questions/ai endpoint spec
+│       │   └── markdown-format.md    # Question format specification
+│       └── scripts/
+│           └── push-questions.py     # CLI tool for bulk uploading
 │
 ├── plans/                            # Development plans & reports
 │   ├── 260401-2041-teaching-platform/   # Phase plans (1-8)
@@ -412,7 +421,34 @@ pnpm run typecheck                # Type-check all
 
 ---
 
-## 14. Next Steps (Phase 9+)
+## 14. External Agent Skills
+
+### ClassPulse Question Creator (Apr 4, 2026)
+Located at `skills/classpulse-question-creator/`, this external AI agent skill enables automated question generation and bulk uploading to ClassPulse.
+
+**Files:**
+- `SKILL.md` — Agent workflow and instructions
+- `references/api-reference.md` — Full API documentation
+- `references/markdown-format.md` — Question format specification
+- `scripts/push-questions.py` — Python CLI for bulk uploading (auto-batches >50 questions)
+
+**Capabilities:**
+- Generate MCQ questions in Bloom's Taxonomy format (levels 1-5)
+- Parse markdown frontmatter with YAML metadata
+- Extract question options from bare checkbox syntax
+- Upload base64-encoded images automatically
+- Process up to 50 questions per request
+- Auto-create missing tags (scoped to authenticated user)
+- Report partial success with created/failed counts
+
+**API Integration:**
+- Uses existing `POST /api/questions/ai` endpoint
+- Authenticates with API key (scope: `ai:questions:write`)
+- Enforces validation: 2-6 options/question, ≥1 correct, max 10K content, max 7M image
+
+---
+
+## 15. Next Steps (Phase 9+)
 
 1. **Analytics & Parent Dashboards** — Performance metrics, trend visualization
 2. **Manual Grading Interface** — Essay/short-answer grading
@@ -422,5 +458,5 @@ pnpm run typecheck                # Type-check all
 
 ---
 
-**Last Generated:** 2026-04-03 by project-manager agent  
+**Last Generated:** 2026-04-04 by docs-manager agent  
 **Codebase Compaction:** See `repomix-output.xml` for full repository pack

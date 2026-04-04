@@ -474,6 +474,33 @@ pnpm run typecheck                # Type-check all (turborepo)
 
 ---
 
+## 15. Agent Skills & Integrations
+
+### ClassPulse Question Creator
+External AI agents can create and push multiple-choice questions to the ClassPulse question bank using a dedicated agent skill at `skills/classpulse-question-creator/`.
+
+**Capabilities:**
+- Generate MCQ questions in Bloom's Taxonomy format (complexity levels 1-5)
+- Parse markdown frontmatter with YAML (complexity, complexityType, tags, explanation)
+- Extract bare checkbox options (`[x]` = correct, `[ ]` = incorrect)
+- Upload base64-encoded images automatically
+- Create up to 50 questions per request (auto-batched by CLI)
+- Auto-create missing tags (scoped to teacher)
+- Support partial success responses (report created + failed counts)
+
+**API Integration:**
+- Uses `POST /api/questions/ai` endpoint (existing, part of Phase 7+ AI Question API)
+- Authenticates via API key with `ai:questions:write` scope
+- Enforces validation: 2-6 options per question, ≥1 correct, max 10K content, max 7M image
+
+**Skill Components:**
+- `SKILL.md` — Core instructions for agents
+- `references/api-reference.md` — API documentation
+- `references/markdown-format.md` — Question format specification
+- `scripts/push-questions.py` — CLI tool for batching and uploading questions
+
+---
+
 ## Related Documents
 - [`code-standards.md`](./code-standards.md) — Coding conventions & patterns
 - [`design-guidelines.md`](./design-guidelines.md) — UI/UX design system
