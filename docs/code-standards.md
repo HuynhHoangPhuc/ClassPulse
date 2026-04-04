@@ -519,6 +519,7 @@ apps/api/src/
 │   └── cors-middleware.ts               # CORS
 ├── routes/
 │   ├── users-route.ts                   # GET/PATCH /api/users
+│   ├── api-key-routes.ts                # POST/GET/DELETE /api/users/api-keys (teacher only)
 │   ├── questions-route.ts               # CRUD + bulk import for questions
 │   ├── tags-route.ts                    # CRUD for tags
 │   ├── assessment-routes.ts             # GET/POST/PUT/DELETE /api/assessments + generate + preview
@@ -545,6 +546,7 @@ apps/api/src/
 │   ├── attempt-service.ts               # Assessment attempt CRUD + submission logic
 │   ├── attempt-query-service.ts         # Complex attempt reads + student results
 │   ├── score-calculator-service.ts      # Score calculation logic
+│   ├── clerk-api-key-service.ts         # Clerk API key validation + verification
 │   ├── parent-dashboard-service.ts      # Parent dashboard aggregation queries (Phase 8)
 │   └── ...
 ├── lib/

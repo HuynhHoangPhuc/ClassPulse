@@ -350,8 +350,15 @@ pnpm run typecheck                # Type-check all (turborepo)
 
 ## 9. Security & Auth Strategy
 
+### Dual Authentication (JWT + API Key)
+- **Primary (JWT):** Browser-based clients authenticate via Clerk JWT issued on sign-in
+- **Fallback (API Key):** Third-party tools (AI agents) authenticate via Clerk API keys stored in `users` table
+- **authMiddleware** attempts JWT validation first; on failure, validates API key
+- Both flows set `userId` on request context for downstream authorization
+- API keys scoped to user, created/managed via `/api/users/api-keys` endpoints
+
 ### JWT Validation
-- Clerk provides JWT in Authorization header
+- Clerk provides JWT in Authorization header (existing flow)
 - **authMiddleware** validates signature using Clerk's JWKS endpoint
 - Extracts user ID from JWT claims, sets as request context
 
