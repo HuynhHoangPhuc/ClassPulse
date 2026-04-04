@@ -1,13 +1,14 @@
 import { verifyToken } from "@clerk/backend";
 import type { MiddlewareHandler } from "hono";
 import type { Env } from "../env.js";
+import { verifyApiKey } from "../services/clerk-api-key-service.js";
 
 // Extend Hono context variables with authenticated userId
 type Variables = { userId: string };
 
 /**
- * Clerk JWT verification middleware.
- * Extracts Bearer token, verifies with Clerk, sets userId on context.
+ * Dual auth middleware: tries Clerk JWT first, falls back to Clerk API Key.
+ * Both paths set userId on context for downstream handlers.
  * Returns 401 JSON on missing or invalid token.
  */
 export const authMiddleware: MiddlewareHandler<Env & { Variables: Variables }> =
@@ -19,19 +20,32 @@ export const authMiddleware: MiddlewareHandler<Env & { Variables: Variables }> =
 
     const token = authHeader.slice(7);
 
+    // Try 1: Clerk JWT verification (existing flow)
     try {
       const payload = await verifyToken(token, {
         secretKey: c.env.CLERK_SECRET_KEY,
       });
 
-      if (!payload?.sub) {
-        return c.json({ error: "Invalid token payload" }, 401);
+      if (payload?.sub) {
+        c.set("userId", payload.sub);
+        await next();
+        return;
+      }
+    } catch {
+      // Not a valid JWT — fall through to API key verification
+    }
+
+    // Try 2: Clerk API Key verification (for third-party AI tools)
+    try {
+      const apiKey = await verifyApiKey(token, c.env.CLERK_SECRET_KEY);
+
+      if (!apiKey.subject) {
+        return c.json({ error: "API key has no associated user" }, 401);
       }
 
-      c.set("userId", payload.sub);
+      c.set("userId", apiKey.subject);
       await next();
-    } catch (err) {
-      const message = err instanceof Error ? err.message : "Token verification failed";
-      return c.json({ error: message }, 401);
+    } catch {
+      return c.json({ error: "Invalid token or API key" }, 401);
     }
   };

@@ -160,6 +160,15 @@ export const aiCreateQuestionsSchema = z.object({
   questions: z.array(aiQuestionItemSchema).min(1).max(50),
 });
 
+/* ── API Key management ── */
+
+export const createApiKeySchema = z.object({
+  name: z.string().min(1).max(100),
+  description: z.string().max(500).optional(),
+  scopes: z.array(z.string()).optional(),
+  expiresInDays: z.number().int().min(1).max(365).optional(),
+});
+
 /* ── Bulk operations ── */
 
 export const bulkQuestionSchema = z.object({

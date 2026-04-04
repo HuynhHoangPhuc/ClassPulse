@@ -18,6 +18,7 @@ import { websocketRoutes } from "./routes/websocket-routes.js";
 import { notificationRoutes } from "./routes/notification-routes.js";
 import { parentRoutes } from "./routes/parent-routes.js";
 import { dashboardRoutes } from "./routes/dashboard-routes.js";
+import { apiKeyRoutes } from "./routes/api-key-routes.js";
 
 type Variables = { userId: string };
 
@@ -53,7 +54,8 @@ const routes = app
   .route("/api", commentRoutes)
   .route("/api", notificationRoutes)
   .route("/api/parent", parentRoutes)
-  .route("/api/dashboard", dashboardRoutes);
+  .route("/api/dashboard", dashboardRoutes)
+  .route("/api/users/api-keys", apiKeyRoutes);
 
 // ── Health check ───────────────────────────────────────────────────────────────
 app.get("/health", (c) => c.json({ status: "ok" }));

@@ -4,6 +4,7 @@ import { Card } from "@/components/ui/card";
 import { DarkModeToggle } from "@/components/layout/dark-mode-toggle";
 import { useCurrentUser } from "@/hooks/use-current-user";
 import { User, Palette, Bell } from "lucide-react";
+import { ApiKeyManagementCard } from "./api-key-management-card";
 
 export function SettingsPage() {
   const { user: clerkUser } = useUser();
@@ -53,6 +54,9 @@ export function SettingsPage() {
           <DarkModeToggle />
         </div>
       </Card>
+
+      {/* API Keys (teacher only) */}
+      {appUser?.role === "teacher" && <ApiKeyManagementCard />}
 
       {/* Notifications */}
       <Card variant="standard">
