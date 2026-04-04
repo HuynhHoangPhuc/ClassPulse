@@ -14,20 +14,20 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@clerk/backend": "^1.20.0",
+    "@clerk/backend": "^3.2.4",
     "@teaching/shared": "workspace:*",
-    "drizzle-orm": "^0.38.0",
-    "hono": "^4.7.0",
+    "drizzle-orm": "^0.45.2",
+    "hono": "^4.12.10",
     "js-yaml": "^4.1.1",
-    "nanoid": "^5.0.0",
-    "zod": "^3.24.0"
+    "nanoid": "^5.1.7",
+    "zod": "^4.3.6"
   },
   "devDependencies": {
-    "@cloudflare/workers-types": "^4.20250109.0",
+    "@cloudflare/workers-types": "^4.20260404.1",
     "@types/js-yaml": "^4.0.9",
-    "drizzle-kit": "^0.30.0",
-    "typescript": "^5.7.0",
+    "drizzle-kit": "^0.31.10",
+    "typescript": "^6.0.2",
     "vitest": "^4.1.2",
-    "wrangler": "^3.100.0"
+    "wrangler": "^4.80.0"
   }
 }
